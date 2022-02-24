@@ -1,10 +1,54 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link to="/who">Who</router-link> |
+    <router-link to="/where">Where</router-link> |
+    <router-link to="/overview">Overview</router-link>
   </div>
-  <router-view/>
+  <router-view
+    :persons="persons"
+    :location="location"
+
+    @selected-persons="selectedPersons"
+    @selected-location="selectedLocation"  
+  />
 </template>
+
+<script>
+import router from './router';
+import store from './store/index';
+
+export default {
+  name: 'App',
+
+  data() {
+    return {
+      persons: store.getters.getPersons,
+      location: store.getters.getLocation,
+    }
+  },
+
+  methods: {
+    selectedPersons(persons) {
+      store.commit('setPersons', persons);
+      this.persons = persons;
+    },
+
+    selectedLocation(location) {
+      store.commit('setLocation', location);
+      this.location = location;
+    }
+  },
+
+  mounted() {
+    if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
+      router.push('/who');
+    } else {
+      router.push('/');
+    }
+  }
+}
+</script>
+
 
 <style lang="scss">
 #app {
