@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes = [
   {
-    path: '/who',
+    path: '/',
     name: 'Who',
     component: () => import(/* webpackChunkName: "who" */ '../views/Who.vue')
   },
@@ -12,7 +12,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "where" */ '../views/Where.vue')
   },
   {
-    path: '/',
+    path: '/overview',
     name: 'Overview',
     component: () => import(/* webpackChunkName: "overview" */ '../views/Overview.vue')
   }

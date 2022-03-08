@@ -54,11 +54,6 @@ export default {
         return person.checked;
       });
 
-      // Transform the objects into an array of UUID's
-      persons = persons.map(person => {
-        return person.uuid;
-      });
-
       this.$emit('selected-persons', persons);
 
       router.push('/where');

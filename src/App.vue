@@ -1,6 +1,6 @@
 <template>
   <div id="nav">
-    <router-link to="/who">Who</router-link> |
+    <router-link to="/">Who</router-link> |
     <router-link to="/where">Where</router-link> |
     <router-link to="/overview">Overview</router-link>
   </div>
@@ -41,9 +41,9 @@ export default {
 
   mounted() {
     if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
-      router.push('/who');
-    } else {
       router.push('/');
+    } else {
+      router.push('/overview');
     }
   }
 }

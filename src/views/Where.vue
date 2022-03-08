@@ -54,11 +54,6 @@ export default {
         return location.checked;
       });
 
-      // Transform the objects into an array of UUID's
-      locations = locations.map(location => {
-        return location.uuid;
-      });
-
       this.$emit('selected-location', locations[0]);
 
       router.push('/overview');
