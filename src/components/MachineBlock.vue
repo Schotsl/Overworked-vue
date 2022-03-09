@@ -1,6 +1,8 @@
 <template>
   <li class="hello">
     <h1>{{ title }}</h1>
+    <b v-if="isCardio" style="color: red;">Is cardio</b>
+    <b v-else style="color: green;">Is weight</b>
 
     <div style="display: flex;">
       <div>
@@ -14,18 +16,18 @@
       </div>
     </div>
 
-    <form>
-               <label for="fname">{{ isCardio ? 'time' : 'weight' }}</label>
-<input type="number" id="fname" v-model="value" name="fname"> 
-      <select v-model="person">
-        <option v-for="person in persons" :value="person.uuid" :key="person.uuid">{{ person.first }} {{ person.last }}</option>
-      </select>
-      <a href="#" @click="addEntry">Send</a>
-    </form>
+    <machine-input
+      :cardio="isCardio"
+      :machine="machine"
+      :persons="persons"
+      :location="location"
+    />
   </li>
 </template>
 
 <script>
+import MachineInput from "./MachineInput.vue";
+
 export default {
   name: 'MachineBlock',
 
@@ -67,34 +69,6 @@ export default {
         this.sets = parsed.sets;
         this.time = parsed.time;
       },
-
-      // async fetchEntry() {
-      //   const domain = process.env.VUE_APP_DOMAIN
-      //   const method = process.env.VUE_APP_METHOD;
-      //   const version = process.env.VUE_APP_VERSION;   
-
-      //   const response = await fetch(`${method}://${domain}/${version}/entry?machine=${this.machine}&location=${this.location.uuid}&person=`);
-      //   const parsed = await response.json();
-      //   console.log(parsed);
-      // },
-
-      async addEntry() {
-        const domain = process.env.VUE_APP_DOMAIN
-        const method1 = process.env.VUE_APP_METHOD;
-        const version = process.env.VUE_APP_VERSION;
-
-        const headers = { 'Content-Type': 'application/json' };
-        const method = "POST";
-        const label = this.isCardio ? 'time' : 'weight';
-        const body = JSON.stringify({
-          [label]: this.value,
-          machine: this.machine,
-          person: this.person,
-          location: this.location.uuid
-        });
-
-        await fetch(`${method1}://${domain}/${version}/entry`, { headers, method, body });
-      }
   },
 
   computed: {
@@ -103,9 +77,12 @@ export default {
     }
   },
 
+  components: {
+    MachineInput,
+  },
+
   mounted() {
     this.fetchMachine();
-    this.fetchEntry();
   }
 }
 </script>

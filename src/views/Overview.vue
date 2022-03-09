@@ -39,7 +39,7 @@ export default {
       const version = process.env.VUE_APP_VERSION;
       
       const date = new Date();
-      const day = date.getDay();
+      const day = date.getDay() - 1;
 
       const promises = this.persons.map(async person => {
         const response = await fetch(`${method}://${domain}/${version}/schedule?day=${day}&person=${person.uuid}&limit=99`);
