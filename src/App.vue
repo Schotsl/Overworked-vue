@@ -1,9 +1,4 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Who</router-link> |
-    <router-link to="/where">Where</router-link> |
-    <router-link to="/overview">Overview</router-link>
-  </div>
   <router-view
     :persons="persons"
     :location="location"
@@ -40,11 +35,15 @@ export default {
   },
 
   mounted() {
-    if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
-      router.push('/');
-    } else {
-      router.push('/overview');
-    }
+    router.push('/');
+
+    // I'd prefer to ask the user for the location on every boot
+
+    // if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
+    //   router.push('/');
+    // } else {
+    //   router.push('/overview');
+    // }
   }
 }
 </script>
