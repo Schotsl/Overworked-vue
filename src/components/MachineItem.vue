@@ -6,6 +6,7 @@
 
     <div class="dropdown" v-if="toggled">
       <div class="row">
+        <template v-if="isUsed">
         <template v-if="isMuscle">
           <div class="labels">
             <h3>Sets</h3>
@@ -34,15 +35,14 @@
             <h4>?</h4>
           </div>
         </template>
+        </template>
 
-        <!--
-          <template>
-            <div class="labels">
-              <h3>There's a first for everything</h3>
-              <h4>Goodluck!</h4>
-            </div>
-          </template>
-        -->
+        <template v-else>
+          <div class="labels">
+            <h3>There's a first for everything</h3>
+            <h4>Goodluck!</h4>
+          </div>
+        </template>
       </div>
 
 
@@ -75,7 +75,8 @@
         <div class="labels">
           <span class="invalid">Weight</span>
           <input
-            value="9"
+            :value="value"
+            class="invalid"
             type="number"
             max="999"
             min="0"
@@ -114,8 +115,6 @@
 </template>
 
 <script>
-// import MachineInput from "./MachineInput.vue";
-
 export default {
   name: 'MachineItem',
 
@@ -128,10 +127,10 @@ export default {
       sets: null,
       time: null,
 
+      value: 0,
+      person: this.persons[0].uuid,
       weights: [],
       toggled: false,
-      person: this.persons[0].uuid,
-      value: 0,
     }
   },
 
@@ -166,13 +165,16 @@ export default {
 
         const response = await fetch(`${method}://${domain}/${version}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`);
         const parsed = await response.json();
-        const weight = parsed.entries.length > 0 ? parsed.entries[0].weight : 0;
+        const weight = parsed.entries.length > 0 ? parsed.entries[0].weight : null;
 
         return weight;
       }
   },
 
   computed: {
+    isUsed() {
+      return this.computedWeight !== null;
+    },
     isCardio() {
       return typeof this.time !== "undefined";
     },
@@ -188,8 +190,8 @@ export default {
   async mounted() {
     const promises = this.persons.map(person => this.fetchEntry(person));
 
-    this.fetchMachine();
     this.weights = await Promise.all(promises);
+    this.fetchMachine();
   }
 }
 </script>
@@ -259,6 +261,7 @@ export default {
         padding: 0 1rem;
 
         min-width: 0;
+        text-align: left;
         flex-direction: column;
 
         &.right {
