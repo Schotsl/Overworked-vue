@@ -166,8 +166,9 @@ export default {
 
         const response = await fetch(`${method}://${domain}/${version}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`);
         const parsed = await response.json();
+        const weight = parsed.entries.length > 0 ? parsed.entries[0].weight : 0;
 
-        return parsed.entries.length > 0 ? parsed.entries[0].weight : 0;
+        return weight;
       }
   },
 
@@ -180,23 +181,15 @@ export default {
     },
     computedWeight() {
       const index = this.persons.findIndex(person => person.uuid === this.person);
-      console.log(this.weights);
       return this.weights[index];
     }
   },
 
-  components: {
-    // MachineInput,
-  },
-
   async mounted() {
-    this.fetchMachine();
-    this.persons.forEach(async person => {
-      const weight = await this.fetchEntry(person);
-      this.weights.push(weight);
-    });
+    const promises = this.persons.map(person => this.fetchEntry(person));
 
-    console.log(this.weights);
+    this.fetchMachine();
+    this.weights = await Promise.all(promises);
   }
 }
 </script>
