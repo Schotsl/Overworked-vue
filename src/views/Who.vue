@@ -8,9 +8,7 @@
         <label :for="person.uuid">{{ person.first }} {{ person.last }}</label>
       </div>
 
-      <div>
-        <button type="submit">Done</button>
-      </div>
+      <button type="submit">Done</button>
     </form>
 
   </section>

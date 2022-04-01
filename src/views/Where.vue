@@ -8,9 +8,7 @@
         <label :for="location.uuid">{{ location.title }}</label>
       </div>
 
-      <div>
-        <button type="submit">Done</button>
-      </div>
+      <button type="submit">Done</button>
     </form>
 
   </section>

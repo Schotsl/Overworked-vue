@@ -110,6 +110,35 @@ export default {
 html,
 body {
   margin: 0px;
+  padding: 0px;
+}
+
+#app {
+  height: 100vh;
+  padding: 1.5rem 1.5rem 0rem;
+
+  box-sizing: border-box;
+}
+
+form,
+section {
+  display: flex;
+
+  flex-direction: column;
+}
+
+section {
+  height: 100%;
+}
+
+form {
+  flex: 1;
+
+  div {
+    display: flex;
+    margin-bottom: .5rem;
+    justify-content: flex-start;
+  }
 }
 
 h1,
@@ -121,12 +150,16 @@ h6 {
   margin: 0;
 }
 
+h1 {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
 input,
 button,
 select {
   border: 1px solid #ced4da;
   padding: 0.375rem 0.75rem;
-  appearance: none;
 
   font-size: 1.5rem;
   text-align: center;
@@ -152,10 +185,24 @@ button {
 
   font-weight: 400;
   text-transform: uppercase;
+
+  margin-top: auto;
+  margin-bottom: 1.5rem;
 }
 
 input[type="button"] {
   padding: 0.375rem 1.3rem 0.375rem 0.75rem;
+}
+
+input[type=checkbox],
+input[type=radio] {
+    margin: 0px;
+    transform: scale(1.25);
+}
+
+label {
+  font-size: 1.25rem;
+  margin-left: .5rem;
 }
 
 .invalid {
