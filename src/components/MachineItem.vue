@@ -20,7 +20,7 @@
 
           <div class="labels right">
             <h3>Weight</h3>
-            <h4>{{ computedWeight }}</h4>
+            <h4>{{ value }}</h4>
           </div>
         </template>
         
@@ -50,7 +50,7 @@
         <div class="labels">
           <span>Person</span>
 
-          <select v-model="person">
+          <select @change="setValue(person.uuid)">
             <option v-for="person in persons" :key="person.uuid" :value="person.uuid">
               {{ person.first }} {{ person.last }}
             </option>
@@ -73,10 +73,10 @@
 
       <div class="row">
         <div class="labels">
-          <span class="invalid">Weight</span>
+          <span :class="{ invalid : isInvalid }">Weight</span>
           <input
-            :value="value"
-            class="invalid"
+            v-model="input"
+            :class="{ invalid : isInvalid }"
             type="number"
             max="999"
             min="0"
@@ -128,8 +128,10 @@ export default {
       time: null,
 
       value: 0,
-      person: this.persons[0].uuid,
+      input: 0,
+
       weights: [],
+      invalid: false,
       toggled: false,
     }
   },
@@ -168,12 +170,38 @@ export default {
         const weight = parsed.entries.length > 0 ? parsed.entries[0].weight : null;
 
         return weight;
+      },
+
+      async addEntry() {
+        const domain = process.env.VUE_APP_DOMAIN
+        const method1 = process.env.VUE_APP_METHOD;
+        const version = process.env.VUE_APP_VERSION;
+
+        const headers = { 'Content-Type': 'application/json' };
+        const method = "POST";
+        const label = this.cardio ? 'time' : 'weight';
+        const body = JSON.stringify({
+          person: this.person,
+          [label]: this.value,
+          machine: this.machine,
+          location: this.location.uuid
+        });
+
+        await fetch(`${method1}://${domain}/${version}/entry`, { headers, method, body });
+      },
+
+      setValue(uuid) {
+        const index = this.persons.findIndex(person => person.uuid === uuid);
+        const value = this.weights[index];
+
+        this.input = value;
+        this.value = value;
       }
   },
 
   computed: {
     isUsed() {
-      return this.computedWeight !== null;
+      return this.value !== null;
     },
     isCardio() {
       return typeof this.time !== "undefined";
@@ -181,9 +209,11 @@ export default {
     isMuscle() {
       return typeof this.reps !== "undefined" && this.sets !== "undefined";
     },
-    computedWeight() {
-      const index = this.persons.findIndex(person => person.uuid === this.person);
-      return this.weights[index];
+    isInvalid() {
+      const isInteger = Number.isInteger(this.input)
+      const isSmall = this.input >= 0 && this.input <= 32767;
+      
+      return !isInteger || !isSmall;
     }
   },
 
@@ -192,6 +222,8 @@ export default {
 
     this.weights = await Promise.all(promises);
     this.fetchMachine();
+
+    this.setValue(this.persons[0].uuid);
   }
 }
 </script>
