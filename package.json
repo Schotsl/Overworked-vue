@@ -1,10 +1,11 @@
 {
-  "name": "overworked-vue",
-  "version": "0.1.0",
-  "private": true,
+  "name": "overworked-client",
+  "version": "1.0.0",
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "check": "vue-cli-service lint --no-fix",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
