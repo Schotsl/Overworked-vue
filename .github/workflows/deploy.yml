@@ -6,18 +6,19 @@ on:
       - main
 
 jobs:
-  name: Quality
-  runs-on: ubuntu-latest
+  quality:
+    name: Quality
+    runs-on: ubuntu-latest
 
-  steps:
-    - name: Checkout sources
-      uses: actions/checkout@v2
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v2
 
-    - name: Install NPM dependencies
-      run: npm install
+      - name: Install NPM dependencies
+        run: npm install
 
-    - name: Run NPM check
-      run: npm run check
+      - name: Run NPM check
+        run: npm run check
 
   build:
     name: Build
