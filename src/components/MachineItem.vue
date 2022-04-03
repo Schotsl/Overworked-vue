@@ -50,9 +50,9 @@
         <div class="labels">
           <span>Person</span>
 
-          <select @change="setValue(person.uuid)">
-            <option v-for="person in persons" :key="person.uuid" :value="person.uuid">
-              {{ person.first }} {{ person.last }}
+          <select v-model="person" @change="setValue(person)">
+            <option v-for="entry in filteredEntries" :key="entry.person" :value="entry.person">
+              {{ entry.first }} {{ entry.last }}
             </option>
           </select>
         </div>
@@ -109,12 +109,16 @@
         </div>
       -->
 
-      <button>Add entry</button>
+      <button @click="addEntry">Add entry</button>
     </div>
   </div>
 </template>
 
 <script>
+const DOMAIN = process.env.VUE_APP_DOMAIN
+const METHOD = process.env.VUE_APP_METHOD;
+const VERSION = process.env.VUE_APP_VERSION;
+
 export default {
   name: 'MachineItem',
 
@@ -130,7 +134,9 @@ export default {
       value: 0,
       input: 0,
 
-      weights: [],
+      person: null,
+      entries: [],
+
       invalid: false,
       toggled: false,
     }
@@ -145,11 +151,7 @@ export default {
 
     methods: {
       async fetchMachine() {
-        const domain = process.env.VUE_APP_DOMAIN
-        const method = process.env.VUE_APP_METHOD;
-        const version = process.env.VUE_APP_VERSION;
-        
-        const response = await fetch(`${method}://${domain}/${version}/machine/${this.machine}`);
+        const response = await fetch(`${METHOD}://${DOMAIN}/${VERSION}/machine/${this.machine}`);
         const parsed = await response.json();
 
         this.title = parsed.title;
@@ -161,38 +163,37 @@ export default {
       },
 
       async fetchEntry(person) {
-        const domain = process.env.VUE_APP_DOMAIN
-        const method = process.env.VUE_APP_METHOD;
-        const version = process.env.VUE_APP_VERSION;   
-
-        const response = await fetch(`${method}://${domain}/${version}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`);
+        const response = await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`);
         const parsed = await response.json();
-        const weight = parsed.entries.length > 0 ? parsed.entries[0].weight : null;
 
-        return weight;
+        return {
+          last: person.last,
+          first: person.first,
+          person: person.uuid,
+          weight: parsed.entries.length > 0 ? parsed.entries[0].weight : null,
+          updated: parsed.entries.length > 0 ? parsed.entries[0].updated : null
+        }
       },
 
       async addEntry() {
-        const domain = process.env.VUE_APP_DOMAIN
-        const method1 = process.env.VUE_APP_METHOD;
-        const version = process.env.VUE_APP_VERSION;
+        if (this.isInvalid) return;
 
         const headers = { 'Content-Type': 'application/json' };
         const method = "POST";
         const label = this.cardio ? 'time' : 'weight';
         const body = JSON.stringify({
           person: this.person,
-          [label]: this.value,
+          [label]: this.input,
           machine: this.machine,
           location: this.location.uuid
         });
 
-        await fetch(`${method1}://${domain}/${version}/entry`, { headers, method, body });
+        await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, { headers, method, body });
       },
 
       setValue(uuid) {
-        const index = this.persons.findIndex(person => person.uuid === uuid);
-        const value = this.weights[index];
+        const index = this.filteredEntries.findIndex(entry => entry.person === uuid);
+        const value = this.filteredEntries[index].weight === null ? 0 : this.filteredEntries[index].weight;
 
         this.input = value;
         this.value = value;
@@ -214,16 +215,29 @@ export default {
       const isSmall = this.input >= 0 && this.input <= 32767;
       
       return !isInteger || !isSmall;
+    },
+
+    filteredEntries() {
+      return this.entries.filter(entry => {
+        const today = new Date();
+        const check = new Date(entry.updated);
+
+        today.setHours(0,0,0,0);
+        // check.setHours(0,0,0,0);
+
+        return today.getTime() !== check.getTime();
+      });
     }
   },
 
   async mounted() {
     const promises = this.persons.map(person => this.fetchEntry(person));
 
-    this.weights = await Promise.all(promises);
+    this.entries = await Promise.all(promises);
     this.fetchMachine();
 
-    this.setValue(this.persons[0].uuid);
+    this.person = this.filteredEntries[0].person;
+    this.setValue(this.filteredEntries[0].person);
   }
 }
 </script>
