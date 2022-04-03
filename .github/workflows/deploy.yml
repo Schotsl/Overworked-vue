@@ -6,19 +6,18 @@ on:
       - main
 
 jobs:
-  quality:
-    name: Quality
-    runs-on: ubuntu-latest
+  name: Quality
+  runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout sources
-        uses: actions/checkout@v2
+  steps:
+    - name: Checkout sources
+      uses: actions/checkout@v2
 
-      - name: Install NPM dependencies
-        run: npm install
+    - name: Install NPM dependencies
+      run: npm install
 
-      - name: Run NPM check
-        run: npm run check
+    - name: Run NPM check
+      run: npm run check
 
   build:
     name: Build
@@ -58,4 +57,4 @@ jobs:
         with:
           args: deploy
         env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
