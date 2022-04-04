@@ -155,10 +155,10 @@ export default {
 
       const empty = parsed.entries.length === 0;
 
-      const speed = empty ? parsed.entries[0].speed : null;
-      const weight = empty ? parsed.entries[0].weight : null;
-      const updated = empty ? parsed.entries[0].updated : null;
-
+      const speed = empty ? null : parsed.entries[0].speed;
+      const weight = empty ? null : parsed.entries[0].weight;
+      const updated = empty ? null : parsed.entries[0].updated;
+      
       return {
         last: person.last,
         first: person.first,
