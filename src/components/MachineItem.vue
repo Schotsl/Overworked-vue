@@ -1,7 +1,7 @@
 <template>
   <div class="machine">
     <div class="container" @click="toggled = !toggled">
-      <h2>{{ machine }} {{ title }}</h2>
+      <h2>{{ title }}</h2>
     </div>
 
     <div class="dropdown" v-if="toggled">
@@ -98,6 +98,7 @@ export default {
   name: "MachineItem",
 
   emits: [
+    "dropdown-loaded",
     "dropdown-toggled",
     "dropdown-emptied",
   ],
@@ -262,6 +263,9 @@ export default {
 
     this.entry = this.entryFiltered[0];
     this.value = this.entryValue;
+
+    this.$emit("dropdown-loaded", this.machine);
+
   },
 };
 </script>

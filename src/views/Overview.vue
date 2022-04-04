@@ -13,14 +13,18 @@
     <!-- <machine-item /> -->
 
     <!-- <ul> -->
+    <span v-if="!schedulesLoaded">Loading...</span>
+
     <machine-item
       v-for="objects in parsed"
+      v-show="schedulesLoaded"
       :key="objects.machine"
       :machine="objects.machine"
       :persons="objects.persons"
       :location="location"
 
-      @dropdown-emptied="removeParsed"
+      @dropdown-loaded="dropdownLoaded"
+      @dropdown-emptied="dropdownEmptied"
     />
     <!-- </ul> -->
   </section>
@@ -82,17 +86,34 @@ export default {
 
         // If the machine doesn't exist we will create the entry
         this.parsed.push({
+          loaded: false,
           machine: schedule.machine,
           persons: [person],
         });
       });
     },
 
-    removeParsed(uuid) {
+    dropdownLoaded(uuid) {
+      const parsed = this.parsed.find((parsed) => {
+        return parsed.machine === uuid;
+      });
+
+      parsed.loaded = true;
+    },
+
+    dropdownEmptied(uuid) {
       this.parsed = this.parsed.filter((parsed) => {
         return parsed.machine !== uuid;
       });
     },
+  },
+
+  computed: {
+    schedulesLoaded() {
+      return this.parsed.every((parsed) => {
+        return parsed.loaded;
+      });
+    }
   },
 
   components: {
