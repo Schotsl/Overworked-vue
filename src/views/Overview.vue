@@ -22,8 +22,10 @@
       :machine="objects.machine"
       :persons="objects.persons"
       :location="location"
+      :toggled="objects.toggled"
       @dropdown-loaded="dropdownLoaded"
       @dropdown-emptied="dropdownEmptied"
+      @dropdown-toggled="dropdownToggled"
     />
     <!-- </ul> -->
   </section>
@@ -84,6 +86,7 @@ export default {
         // If the machine doesn't exist we will create the entry
         this.parsed.push({
           loaded: false,
+          toggled: false,
           machine: schedule.machine,
           persons: [person],
         });
@@ -101,6 +104,16 @@ export default {
     dropdownEmptied(uuid) {
       this.parsed = this.parsed.filter((parsed) => {
         return parsed.machine !== uuid;
+      });
+    },
+
+    dropdownToggled(uuid) {
+      this.parsed.forEach((parsed) => {
+        if (parsed.machine !== uuid) {
+          parsed.toggled = false;
+        } else {
+          parsed.toggled = !parsed.toggled;
+        }
       });
     },
   },

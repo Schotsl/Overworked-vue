@@ -1,6 +1,6 @@
 <template>
   <div class="machine">
-    <div class="container" @click="toggled = !toggled">
+    <div class="container" @click="$emit('dropdown-toggled', machine)">
       <h2>{{ title }}</h2>
     </div>
 
@@ -114,11 +114,11 @@ export default {
       entries: [],
 
       invalid: false,
-      toggled: false,
     };
   },
 
   props: {
+    toggled: Boolean,
     persons: Array,
     machine: String,
     location: Object,
