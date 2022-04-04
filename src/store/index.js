@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
 export default createStore({
   state: {
@@ -7,21 +7,21 @@ export default createStore({
   },
   mutations: {
     setPersons(state, payload) {
-      updateStorage(state, 'persons', payload)
+      updateStorage(state, "persons", payload);
     },
     setLocation(state, payload) {
-      updateStorage(state, 'location', payload)
-    }
+      updateStorage(state, "location", payload);
+    },
   },
   getters: {
     getPersons(state) {
-      return checkStorage(state, 'persons');
+      return checkStorage(state, "persons");
     },
     getLocation(state) {
-      return checkStorage(state, 'location');
-    }
-  }
-})
+      return checkStorage(state, "location");
+    },
+  },
+});
 
 function checkStorage(state, name) {
   if (state[name] === null) {
@@ -31,7 +31,7 @@ function checkStorage(state, name) {
     if (result === null) {
       return;
     }
-    
+
     // Transform the JSON into JavaScript objects
     const parsed = JSON.parse(result);
 
