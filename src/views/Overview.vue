@@ -22,7 +22,6 @@
       :machine="objects.machine"
       :persons="objects.persons"
       :location="location"
-
       @dropdown-loaded="dropdownLoaded"
       @dropdown-emptied="dropdownEmptied"
     />
@@ -31,9 +30,7 @@
 </template>
 
 <script>
-// import store from "../store/index";
 import MachineItem from "../components/MachineItem";
-// import MachineBlock from "../components/MachineBlock";
 
 export default {
   name: "Overview",
@@ -113,7 +110,7 @@ export default {
       return this.parsed.every((parsed) => {
         return parsed.loaded;
       });
-    }
+    },
   },
 
   components: {

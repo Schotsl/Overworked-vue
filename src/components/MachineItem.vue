@@ -97,11 +97,7 @@ const VERSION = process.env.VUE_APP_VERSION;
 export default {
   name: "MachineItem",
 
-  emits: [
-    "dropdown-loaded",
-    "dropdown-toggled",
-    "dropdown-emptied",
-  ],
+  emits: ["dropdown-loaded", "dropdown-toggled", "dropdown-emptied"],
 
   data() {
     return {
@@ -265,7 +261,6 @@ export default {
     this.value = this.entryValue;
 
     this.$emit("dropdown-loaded", this.machine);
-
   },
 };
 </script>
