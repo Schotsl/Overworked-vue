@@ -15,10 +15,12 @@
     <!-- <ul> -->
     <machine-item
       v-for="objects in parsed"
-      :key="objects.uuid"
+      :key="objects.machine"
       :machine="objects.machine"
       :persons="objects.persons"
       :location="location"
+
+      @dropdown-emptied="removeParsed"
     />
     <!-- </ul> -->
   </section>
@@ -85,11 +87,16 @@ export default {
         });
       });
     },
+
+    removeParsed(uuid) {
+      this.parsed = this.parsed.filter((parsed) => {
+        return parsed.machine !== uuid;
+      });
+    },
   },
 
   components: {
     MachineItem,
-    // MachineBlock
   },
 
   mounted() {

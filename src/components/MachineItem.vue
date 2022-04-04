@@ -1,7 +1,7 @@
 <template>
   <div class="machine">
     <div class="container" @click="toggled = !toggled">
-      <h2>{{ title }}</h2>
+      <h2>{{ machine }} {{ title }}</h2>
     </div>
 
     <div class="dropdown" v-if="toggled">
@@ -97,6 +97,11 @@ const VERSION = process.env.VUE_APP_VERSION;
 export default {
   name: "MachineItem",
 
+  emits: [
+    "dropdown-toggled",
+    "dropdown-emptied",
+  ],
+
   data() {
     return {
       title: null,
@@ -158,7 +163,7 @@ export default {
       const speed = empty ? null : parsed.entries[0].speed;
       const weight = empty ? null : parsed.entries[0].weight;
       const updated = empty ? null : parsed.entries[0].updated;
-      
+
       return {
         last: person.last,
         first: person.first,
@@ -184,18 +189,24 @@ export default {
         location: this.location.uuid,
       });
 
-      // Update the updated property so it can be marked as "done" for the day
-      this.entry.updated = new Date();
-
-      // Switch to the next entry / person
-      this.entry = this.entryFiltered[0];
-      this.value = this.entryValue;
-
       await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, {
         headers,
         method,
         body,
       });
+
+      // Update the updated property so it can be marked as "done" for the day
+      this.entry.updated = new Date();
+
+      // If we've updated every entry we can remove the machine from the list
+      if (this.entryFiltered.length === 0) {
+        this.$emit("dropdown-emptied", this.machine);
+        return;
+      }
+
+      // Switch to the next entry / person
+      this.entry = this.entryFiltered[0];
+      this.value = this.entryValue;
     },
   },
 
@@ -242,6 +253,12 @@ export default {
 
     this.entries = await Promise.all(promises);
     this.fetchMachine();
+
+    // If we've updated every entry we can remove the machine from the list
+    if (this.entryFiltered.length === 0) {
+      this.$emit("dropdown-emptied", this.machine);
+      return;
+    }
 
     this.entry = this.entryFiltered[0];
     this.value = this.entryValue;
