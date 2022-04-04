@@ -1,10 +1,10 @@
 <template>
   <li class="hello">
     <h1>{{ title }}</h1>
-    <b v-if="isCardio" style="color: red;">Is cardio</b>
-    <b v-else style="color: green;">Is weight</b>
+    <b v-if="isCardio" style="color: red">Is cardio</b>
+    <b v-else style="color: green">Is weight</b>
 
-    <div style="display: flex;">
+    <div style="display: flex">
       <div>
         <h3>Sets</h3>
         {{ sets }}
@@ -29,7 +29,7 @@
 import MachineInput from "./MachineInput.vue";
 
 export default {
-  name: 'MachineBlock',
+  name: "MachineBlock",
 
   data() {
     return {
@@ -40,12 +40,10 @@ export default {
       sets: null,
       time: null,
 
-
       person: null,
       value: 0,
-    }
+    };
   },
-
 
   props: {
     persons: Array,
@@ -53,28 +51,30 @@ export default {
     location: Object,
   },
 
-    methods: {
-      async fetchMachine() {
-        const domain = process.env.VUE_APP_DOMAIN
-        const method = process.env.VUE_APP_METHOD;
-        const version = process.env.VUE_APP_VERSION;
-        
-        const response = await fetch(`${method}://${domain}/${version}/machine/${this.machine}`);
-        const parsed = await response.json();
+  methods: {
+    async fetchMachine() {
+      const domain = process.env.VUE_APP_DOMAIN;
+      const method = process.env.VUE_APP_METHOD;
+      const version = process.env.VUE_APP_VERSION;
 
-        this.title = parsed.title;
-        this.image = parsed.image;
+      const response = await fetch(
+        `${method}://${domain}/${version}/machine/${this.machine}`
+      );
+      const parsed = await response.json();
 
-        this.reps = parsed.reps;
-        this.sets = parsed.sets;
-        this.time = parsed.time;
-      },
+      this.title = parsed.title;
+      this.image = parsed.image;
+
+      this.reps = parsed.reps;
+      this.sets = parsed.sets;
+      this.time = parsed.time;
+    },
   },
 
   computed: {
     isCardio() {
       return typeof this.time !== "undefined";
-    }
+    },
   },
 
   components: {
@@ -83,8 +83,8 @@ export default {
 
   mounted() {
     this.fetchMachine();
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">

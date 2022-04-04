@@ -2,52 +2,48 @@
   <router-view
     :persons="persons"
     :location="location"
-
     @selected-persons="selectedPersons"
-    @selected-location="selectedLocation"  
+    @selected-location="selectedLocation"
   />
 </template>
 
 <script>
-import router from './router';
-import store from './store/index';
+// import router from './router';
+import store from "./store/index";
 
 export default {
-  name: 'App',
+  name: "App",
 
   data() {
     return {
       persons: store.getters.getPersons,
       location: store.getters.getLocation,
-    }
+    };
   },
 
   methods: {
     selectedPersons(persons) {
-      store.commit('setPersons', persons);
+      store.commit("setPersons", persons);
       this.persons = persons;
     },
 
     selectedLocation(location) {
-      store.commit('setLocation', location);
+      store.commit("setLocation", location);
       this.location = location;
-    }
+    },
   },
 
   mounted() {
-    router.push('/');
-
+    // router.push('/');
     // I'd prefer to ask the user for the location on every boot
-
     // if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
     //   router.push('/');
     // } else {
     //   router.push('/overview');
     // }
-  }
-}
+  },
+};
 </script>
-
 
 <style lang="scss">
 #app {
@@ -136,7 +132,7 @@ form {
 
   div {
     display: flex;
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     justify-content: flex-start;
   }
 }
@@ -194,15 +190,15 @@ input[type="button"] {
   padding: 0.375rem 1.3rem 0.375rem 0.75rem;
 }
 
-input[type=checkbox],
-input[type=radio] {
-    margin: 0px;
-    transform: scale(1.25);
+input[type="checkbox"],
+input[type="radio"] {
+  margin: 0px;
+  transform: scale(1.25);
 }
 
 label {
   font-size: 1.25rem;
-  margin-left: .5rem;
+  margin-left: 0.5rem;
 }
 
 .invalid {

@@ -13,14 +13,13 @@
     <!-- <machine-item /> -->
 
     <!-- <ul> -->
-      <machine-item 
-        v-for="objects in parsed"
-
-        :key="objects.uuid"
-        :machine="objects.machine"
-        :persons="objects.persons"
-        :location="location"
-      />
+    <machine-item
+      v-for="objects in parsed"
+      :key="objects.uuid"
+      :machine="objects.machine"
+      :persons="objects.persons"
+      :location="location"
+    />
     <!-- </ul> -->
   </section>
 </template>
@@ -31,47 +30,46 @@ import MachineItem from "../components/MachineItem";
 // import MachineBlock from "../components/MachineBlock";
 
 export default {
-  name: 'Overview',
+  name: "Overview",
 
-  props: [
-    'persons',
-    'location',
-  ],
+  props: ["persons", "location"],
 
   data() {
     return {
       day: 0,
       parsed: [],
-    }
+    };
   },
 
   methods: {
     async fetchSchedules() {
       this.parsed = [];
 
-      const domain = process.env.VUE_APP_DOMAIN
+      const domain = process.env.VUE_APP_DOMAIN;
       const method = process.env.VUE_APP_METHOD;
       const version = process.env.VUE_APP_VERSION;
-      
-      const promises = this.persons.map(async person => {
-        const response = await fetch(`${method}://${domain}/${version}/schedule?day=${this.day}&person=${person.uuid}&limit=99`);
+
+      const promises = this.persons.map(async (person) => {
+        const response = await fetch(
+          `${method}://${domain}/${version}/schedule?day=${this.day}&person=${person.uuid}&limit=99`
+        );
         const parsed = await response.json();
 
         return { ...parsed, person };
       });
 
       const results = await Promise.all(promises);
-      const complex = results.map(response => response.schedules);
+      const complex = results.map((response) => response.schedules);
       const schedules = complex.flat();
 
-      schedules.forEach(schedule => {
+      schedules.forEach((schedule) => {
         // We're gonna group by machine so search using machine UUID
-        const person = this.persons.find(person => {
+        const person = this.persons.find((person) => {
           return person.uuid == schedule.person;
         });
 
-        const result = this.parsed.find(object => {
-          return object.machine === schedule.machine
+        const result = this.parsed.find((object) => {
+          return object.machine === schedule.machine;
         });
 
         // Add the person UUID and return if the machine has been found
@@ -83,7 +81,7 @@ export default {
         // If the machine doesn't exist we will create the entry
         this.parsed.push({
           machine: schedule.machine,
-          persons: [ person ],
+          persons: [person],
         });
       });
     },
@@ -100,8 +98,8 @@ export default {
 
     this.day = day;
     this.fetchSchedules();
-  }
-}
+  },
+};
 </script>
 
 <style lang="scss" scoped>

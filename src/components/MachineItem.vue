@@ -5,36 +5,46 @@
     </div>
 
     <div class="dropdown" v-if="toggled">
+      <template v-if="entry.backup">
+        <div class="row">
+          <div class="labels">
+            <h3 class="warning">
+              You've never done this workout on this location!
+            </h3>
+          </div>
+        </div>
+      </template>
+
       <div class="row">
         <template v-if="isUsed">
-        <template v-if="isMuscle">
-          <div class="labels">
-            <h3>Sets</h3>
-            <h4>{{ sets }}</h4>
-          </div>
+          <template v-if="isCardio">
+            <div class="labels">
+              <h3>Time</h3>
+              <h4>{{ time }}</h4>
+            </div>
 
-          <div class="labels">
-            <h3>Reps</h3>
-            <h4>{{ reps }}</h4>
-          </div>
+            <div class="labels">
+              <h3>Speed</h3>
+              <h4>{{ entry.speed }}</h4>
+            </div>
+          </template>
 
-          <div class="labels right">
-            <h3>Weight</h3>
-            <h4>{{ value }}</h4>
-          </div>
-        </template>
-        
-        <template v-else-if="isCardio">
-          <div class="labels">
-            <h3>Time</h3>
-            <h4>{{ time }}</h4>
-          </div>
+          <template v-else>
+            <div class="labels">
+              <h3>Sets</h3>
+              <h4>{{ sets }}</h4>
+            </div>
 
-          <div class="labels">
-            <h3>Speed</h3>
-            <h4>?</h4>
-          </div>
-        </template>
+            <div class="labels">
+              <h3>Reps</h3>
+              <h4>{{ reps }}</h4>
+            </div>
+
+            <div class="labels right">
+              <h3>Weight</h3>
+              <h4>{{ entry.weight }}</h4>
+            </div>
+          </template>
         </template>
 
         <template v-else>
@@ -45,38 +55,28 @@
         </template>
       </div>
 
-
       <div class="row">
         <div class="labels">
           <span>Person</span>
 
-          <select v-model="person" @change="setValue(person)">
-            <option v-for="entry in filteredEntries" :key="entry.person" :value="entry.person">
+          <select v-model="entry" @change="value = entryValue">
+            <option
+              v-for="entry in entryFiltered"
+              :key="entry.person"
+              :value="entry"
+            >
               {{ entry.first }} {{ entry.last }}
             </option>
           </select>
         </div>
       </div>
 
-      <!--
-        <div class="row">
-          <div class="labels">
-            <span>Type</span>
-
-            <select>
-              <option value="muscle">Muscle</option>
-              <option value="cardio">Cardio</option>
-            </select>
-          </div>
-        </div>
-      -->
-
       <div class="row">
         <div class="labels">
-          <span :class="{ invalid : isInvalid }">Weight</span>
+          <span :class="{ invalid: isInvalid }">{{ entryType }}</span>
           <input
-            v-model="input"
-            :class="{ invalid : isInvalid }"
+            v-model="value"
+            :class="{ invalid: isInvalid }"
             type="number"
             max="999"
             min="0"
@@ -84,43 +84,18 @@
         </div>
       </div>
 
-      <!--
-        <div class="row">
-          <div class="labels">
-            <span>Time</span>
-            <select v-model="selectedTemplate.time">
-              <option v-for="time in times" :key="time" :value="time">
-                {{ time }}
-              </option>
-            </select>
-          </div>
-
-          <div class="labels">
-            <span>Speed</span>
-            <input
-              v-model.number="selectedTemplate.speed"
-              :class="{ invalid: errors.speed }"
-              @input="errors.speed = false"
-              type="number"
-              min="0"
-              max="999"
-            />
-          </div>
-        </div>
-      -->
-
       <button @click="addEntry">Add entry</button>
     </div>
   </div>
 </template>
 
 <script>
-const DOMAIN = process.env.VUE_APP_DOMAIN
+const DOMAIN = process.env.VUE_APP_DOMAIN;
 const METHOD = process.env.VUE_APP_METHOD;
 const VERSION = process.env.VUE_APP_VERSION;
 
 export default {
-  name: 'MachineItem',
+  name: "MachineItem",
 
   data() {
     return {
@@ -132,16 +107,14 @@ export default {
       time: null,
 
       value: 0,
-      input: 0,
-
+      entry: null,
       person: null,
       entries: [],
 
       invalid: false,
       toggled: false,
-    }
+    };
   },
-
 
   props: {
     persons: Array,
@@ -149,102 +122,136 @@ export default {
     location: Object,
   },
 
-    methods: {
-      async fetchMachine() {
-        const response = await fetch(`${METHOD}://${DOMAIN}/${VERSION}/machine/${this.machine}`);
-        const parsed = await response.json();
+  methods: {
+    async fetchMachine() {
+      const response = await fetch(
+        `${METHOD}://${DOMAIN}/${VERSION}/machine/${this.machine}`
+      );
 
-        this.title = parsed.title;
-        this.image = parsed.image;
+      const parsed = await response.json();
 
-        this.reps = parsed.reps;
-        this.sets = parsed.sets;
-        this.time = parsed.time;
-      },
+      this.reps = parsed.reps;
+      this.sets = parsed.sets;
+      this.time = parsed.time;
+      this.title = parsed.title;
+    },
 
-      async fetchEntry(person) {
-        const response = await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`);
-        const parsed = await response.json();
+    async fetchEntry(person) {
+      let response = await fetch(
+        `${METHOD}://${DOMAIN}/${VERSION}/entry?limit=1&machine=${this.machine}&location=${this.location.uuid}&person=${person.uuid}`
+      );
 
-        return {
-          last: person.last,
-          first: person.first,
-          person: person.uuid,
-          weight: parsed.entries.length > 0 ? parsed.entries[0].weight : null,
-          updated: parsed.entries.length > 0 ? parsed.entries[0].updated : null
-        }
-      },
+      let parsed = await response.json();
+      let backup = false;
 
-      async addEntry() {
-        if (this.isInvalid) return;
+      if (parsed.entries.length === 0) {
+        response = await fetch(
+          `${METHOD}://${DOMAIN}/${VERSION}/entry?limit=1&machine=${this.machine}&person=${person.uuid}`
+        );
 
-        const headers = { 'Content-Type': 'application/json' };
-        const method = "POST";
-        const label = this.cardio ? 'time' : 'weight';
-        const body = JSON.stringify({
-          person: this.person,
-          [label]: this.input,
-          machine: this.machine,
-          location: this.location.uuid
-        });
-
-        await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, { headers, method, body });
-      },
-
-      setValue(uuid) {
-        const index = this.filteredEntries.findIndex(entry => entry.person === uuid);
-        const value = this.filteredEntries[index].weight === null ? 0 : this.filteredEntries[index].weight;
-
-        this.input = value;
-        this.value = value;
+        parsed = await response.json();
+        backup = true;
       }
+
+      const empty = parsed.entries.length === 0;
+
+      const speed = empty ? parsed.entries[0].speed : null;
+      const weight = empty ? parsed.entries[0].weight : null;
+      const updated = empty ? parsed.entries[0].updated : null;
+
+      return {
+        last: person.last,
+        first: person.first,
+        person: person.uuid,
+
+        speed,
+        weight,
+        backup,
+        updated,
+      };
+    },
+
+    async addEntry() {
+      if (this.isInvalid) return;
+
+      const headers = { "Content-Type": "application/json" };
+      const method = "POST";
+      const label = this.entryType.toLowerCase();
+      const body = JSON.stringify({
+        person: this.entry.person,
+        [label]: this.value,
+        machine: this.machine,
+        location: this.location.uuid,
+      });
+
+      // Update the updated property so it can be marked as "done" for the day
+      this.entry.updated = new Date();
+
+      // Switch to the next entry / person
+      this.entry = this.entryFiltered[0];
+      this.value = this.entryValue;
+
+      await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, {
+        headers,
+        method,
+        body,
+      });
+    },
   },
 
   computed: {
-    isUsed() {
-      return this.value !== null;
-    },
-    isCardio() {
-      return typeof this.time !== "undefined";
-    },
-    isMuscle() {
-      return typeof this.reps !== "undefined" && this.sets !== "undefined";
-    },
     isInvalid() {
-      const isInteger = Number.isInteger(this.input)
-      const isSmall = this.input >= 0 && this.input <= 32767;
-      
+      const isSmall = this.value >= 0 && this.value <= 32767;
+      const isInteger = Number.isInteger(this.value);
+
       return !isInteger || !isSmall;
     },
+    isCardio() {
+      return typeof this.time === "number";
+    },
+    isUsed() {
+      return this.isCardio ? this.entry.speed : this.entry.weight;
+    },
 
-    filteredEntries() {
-      return this.entries.filter(entry => {
+    entryFiltered() {
+      return this.entries.filter((entry) => {
         const today = new Date();
         const check = new Date(entry.updated);
 
-        today.setHours(0,0,0,0);
-        // check.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
+        check.setHours(0, 0, 0, 0);
 
         return today.getTime() !== check.getTime();
       });
-    }
+    },
+    entryValue() {
+      return this.isUsed
+        ? this.isCardio
+          ? this.entry.speed
+          : this.entry.weight
+        : 0;
+    },
+    entryType() {
+      return this.isCardio ? "Time" : "Weight";
+    },
   },
 
   async mounted() {
-    const promises = this.persons.map(person => this.fetchEntry(person));
+    // TODO: these promises could be combined into one
+    const promises = this.persons.map((person) => this.fetchEntry(person));
 
     this.entries = await Promise.all(promises);
     this.fetchMachine();
 
-    this.person = this.filteredEntries[0].person;
-    this.setValue(this.filteredEntries[0].person);
-  }
-}
+    this.entry = this.entryFiltered[0];
+    this.value = this.entryValue;
+  },
+};
 </script>
 
 <style scoped lang="scss">
 .machine {
-  margin: .75rem 0;
+  margin: 0.75rem 0;
   border: 1px solid rgba(0, 0, 0, 0.125);
 
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
@@ -329,6 +336,10 @@ export default {
           line-height: 1;
           margin-bottom: 0.85rem;
         }
+      }
+
+      .warning {
+        color: red;
       }
 
       &:first-of-type {
