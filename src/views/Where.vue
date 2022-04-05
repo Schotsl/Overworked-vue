@@ -25,6 +25,10 @@
 import router from "../router/index";
 import store from "../store/index";
 
+const DOMAIN = process.env.VUE_APP_DOMAIN;
+const METHOD = process.env.VUE_APP_METHOD;
+const VERSION = process.env.VUE_APP_VERSION;
+
 export default {
   name: "Where",
 
@@ -42,12 +46,8 @@ export default {
       const date = new Date();
       const day = date.getDay();
 
-      const domain = process.env.VUE_APP_DOMAIN;
-      const method = process.env.VUE_APP_METHOD;
-      const version = process.env.VUE_APP_VERSION;
-
       const response = await fetch(
-        `${method}://${domain}/${version}/location?limit=99`
+        `${METHOD}://${DOMAIN}/${VERSION}/location?limit=99`
       );
 
       const parsed = await response.json();

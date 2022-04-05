@@ -34,6 +34,10 @@
 <script>
 import MachineItem from "../components/MachineItem";
 
+const DOMAIN = process.env.VUE_APP_DOMAIN;
+const METHOD = process.env.VUE_APP_METHOD;
+const VERSION = process.env.VUE_APP_VERSION;
+
 export default {
   name: "Overview",
 
@@ -50,13 +54,9 @@ export default {
     async fetchSchedules() {
       this.parsed = [];
 
-      const domain = process.env.VUE_APP_DOMAIN;
-      const method = process.env.VUE_APP_METHOD;
-      const version = process.env.VUE_APP_VERSION;
-
       const promises = this.persons.map(async (person) => {
         const response = await fetch(
-          `${method}://${domain}/${version}/schedule?day=${this.day}&person=${person.uuid}&limit=99`
+          `${METHOD}://${DOMAIN}/${VERSION}/schedule?day=${this.day}&person=${person.uuid}&limit=99`
         );
         const parsed = await response.json();
 
