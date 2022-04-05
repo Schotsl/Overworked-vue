@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import router from './router';
+import router from "./router";
 import store from "./store/index";
 
 export default {
@@ -36,9 +36,9 @@ export default {
   mounted() {
     // Send the user too the start if no data is set
     if (this.persons.length === 0 || typeof this.location === "undefined") {
-      router.push('/');
+      router.push("/");
     } else {
-      router.push('/overview');
+      router.push("/overview");
     }
   },
 };

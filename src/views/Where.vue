@@ -7,10 +7,8 @@
         <input
           :id="object.uuid"
           :value="object"
-
           type="radio"
           name="location"
-
           v-model="location"
         />
         <label :for="object.uuid">{{ object.title }}</label>
@@ -55,7 +53,7 @@ export default {
       const schedule = schedules[day];
 
       this.locations = parsed.locations;
-      this.location = this.locations.find(location => {
+      this.location = this.locations.find((location) => {
         return location.uuid === schedule.location;
       });
     },
