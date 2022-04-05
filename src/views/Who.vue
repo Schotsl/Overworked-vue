@@ -15,6 +15,7 @@
 
 <script>
 import router from "../router/index";
+import store from "../store/index";
 
 export default {
   name: "Who",
@@ -29,6 +30,9 @@ export default {
 
   methods: {
     async fetchPersons() {
+      const date = new Date();
+      const day = date.getDay();
+
       const domain = process.env.VUE_APP_DOMAIN;
       const method = process.env.VUE_APP_METHOD;
       const version = process.env.VUE_APP_VERSION;
@@ -36,23 +40,39 @@ export default {
       const response = await fetch(
         `${method}://${domain}/${version}/person?limit=99`
       );
+
       const parsed = await response.json();
+      const schedules = store.getters.getSchedule;
+
+      const schedule = schedules[day];
+      const persons = schedule.persons;
 
       this.persons = parsed.persons.map((person) => {
-        return { ...person, checked: false };
+        return { ...person, checked: persons.includes(person.uuid) };
       });
     },
 
     selectedPersons() {
-      let persons = this.persons;
-
       // Remove every person that isn't checked
-      persons = persons.filter((person) => {
+      const persons = this.persons.filter((person) => {
         return person.checked;
+      });
+
+      // Select the current day from the schedule
+      const date = new Date();
+      const day = date.getDay();
+
+      const schedules = store.getters.getSchedule;
+      const schedule = schedules[day];
+
+      // Store the persons UUID in the store based on the current day
+      schedule.persons = persons.map((person) => {
+        return person.uuid;
       });
 
       this.$emit("selected-persons", persons);
 
+      store.commit("setSchedule", schedules);
       router.push("/where");
     },
   },

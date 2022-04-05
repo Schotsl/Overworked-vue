@@ -8,7 +8,7 @@
 </template>
 
 <script>
-// import router from './router';
+import router from './router';
 import store from "./store/index";
 
 export default {
@@ -23,24 +23,23 @@ export default {
 
   methods: {
     selectedPersons(persons) {
-      store.commit("setPersons", persons);
+      // store.commit("setPersons", persons);
       this.persons = persons;
     },
 
     selectedLocation(location) {
-      store.commit("setLocation", location);
+      // store.commit("setLocation", location);
       this.location = location;
     },
   },
 
   mounted() {
-    // router.push('/');
-    // I'd prefer to ask the user for the location on every boot
-    // if (typeof this.persons === "undefined" || typeof this.location === "undefined") {
-    //   router.push('/');
-    // } else {
-    //   router.push('/overview');
-    // }
+    // Send the user too the start if no data is set
+    if (this.persons.length === 0 || typeof this.location === "undefined") {
+      router.push('/');
+    } else {
+      router.push('/overview');
+    }
   },
 };
 </script>
