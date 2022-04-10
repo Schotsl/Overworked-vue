@@ -32,15 +32,6 @@ export default {
       this.location = location;
     },
   },
-
-  mounted() {
-    // Send the user too the start if no data is set
-    if (this.persons.length === 0 || typeof this.location === "undefined") {
-      router.push("/");
-    } else {
-      router.push("/overview");
-    }
-  },
 };
 </script>
 

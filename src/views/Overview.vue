@@ -136,6 +136,11 @@ export default {
 
     this.day = day;
     this.fetchSchedules();
+
+    // Send the user too the start if no data is set
+    if (this.persons.length === 0 || typeof this.location === "undefined") {
+      router.push("/");
+    }
   },
 };
 </script>

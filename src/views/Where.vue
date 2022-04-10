@@ -78,6 +78,11 @@ export default {
 
   mounted() {
     this.fetchLocations();
+
+    // The persons gets set first so if it isn't set we'll restart the process
+    if (this.persons.length === 0) {
+      router.push("/");
+    }
   },
 };
 </script>
