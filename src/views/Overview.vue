@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import router from "../router/index";
+
 import MachineItem from "../components/MachineItem";
 
 const DOMAIN = process.env.VUE_APP_DOMAIN;

@@ -30,6 +30,8 @@ const VERSION = process.env.VUE_APP_VERSION;
 export default {
   name: "Where",
 
+  props: ["persons"],
+
   emits: ["selected-location"],
 
   data() {

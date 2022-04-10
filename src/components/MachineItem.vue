@@ -76,6 +76,7 @@
           <span :class="{ invalid: isInvalid }">{{ entryType }}</span>
           <input
             v-model="value"
+            v-on:keyup.enter="addEntry"
             :class="{ invalid: isInvalid }"
             type="number"
             max="999"
