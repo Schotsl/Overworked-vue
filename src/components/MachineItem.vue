@@ -63,11 +63,7 @@
           <span>Person</span>
 
           <select v-model="entry" @change="value = entryValue">
-            <option
-              v-for="entry in entryFiltered"
-              :key="entry.person"
-              :value="entry"
-            >
+            <option v-for="entry in entries" :key="entry.person" :value="entry">
               {{ entry.first }} {{ entry.last }}
             </option>
           </select>
@@ -202,11 +198,17 @@ export default {
       // If we've updated every entry we can remove the machine from the list
       if (this.entryFiltered.length === 0) {
         this.$emit("dropdown-emptied", this.machine);
-        return;
       }
 
       // Switch to the next entry / person
-      this.entry = this.entryFiltered[0];
+      const index = this.entries.findIndex(
+        (entry) => entry.person === this.entry.person
+      );
+
+      this.entry =
+        index + 1 >= this.entries.length
+          ? this.entries[0]
+          : this.entries[index + 1];
       this.value = this.entryValue;
     },
   },
@@ -258,10 +260,9 @@ export default {
     // If we've updated every entry we can remove the machine from the list
     if (this.entryFiltered.length === 0) {
       this.$emit("dropdown-emptied", this.machine);
-      return;
     }
 
-    this.entry = this.entryFiltered[0];
+    this.entry = this.entries[0];
     this.value = this.entryValue;
 
     this.$emit("dropdown-loaded", this.machine);

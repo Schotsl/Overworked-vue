@@ -1,14 +1,32 @@
 <template>
   <section class="overview">
-    <select v-model.number="day" @change="fetchSchedules">
-      <option value="1">Monday</option>
-      <option value="2">Tuesday</option>
-      <option value="3">Wednesday</option>
-      <option value="4">Thursday</option>
-      <option value="5">Friday</option>
-      <option value="6">Saturday</option>
-      <option value="0">Sunday</option>
-    </select>
+    <div style="display: flex">
+      <select v-model.number="day" @change="fetchSchedules">
+        <option value="1">Monday</option>
+        <option value="2">Tuesday</option>
+        <option value="3">Wednesday</option>
+        <option value="4">Thursday</option>
+        <option value="5">Friday</option>
+        <option value="6">Saturday</option>
+        <option value="0">Sunday</option>
+      </select>
+
+      <button @click="filtered = !filtered" :class="{ inactive: !filtered }">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#000"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+        </svg>
+      </button>
+    </div>
 
     <!-- <machine-item /> -->
 
@@ -16,9 +34,10 @@
     <span v-if="!schedulesLoaded">Loading...</span>
 
     <machine-item
-      v-for="objects in parsed"
+      v-for="objects in schedulesFiltered"
       v-show="schedulesLoaded"
       :key="objects.machine"
+      :filtered="filtered"
       :machine="objects.machine"
       :persons="objects.persons"
       :location="location"
@@ -49,6 +68,7 @@ export default {
     return {
       day: 0,
       parsed: [],
+      filtered: true,
     };
   },
 
@@ -87,6 +107,7 @@ export default {
 
         // If the machine doesn't exist we will create the entry
         this.parsed.push({
+          empty: false,
           loaded: false,
           toggled: false,
           machine: schedule.machine,
@@ -104,9 +125,11 @@ export default {
     },
 
     dropdownEmptied(uuid) {
-      this.parsed = this.parsed.filter((parsed) => {
-        return parsed.machine !== uuid;
+      const parsed = this.parsed.find((parsed) => {
+        return parsed.machine === uuid;
       });
+
+      parsed.empty = true;
     },
 
     dropdownToggled(uuid) {
@@ -122,8 +145,14 @@ export default {
 
   computed: {
     schedulesLoaded() {
-      return this.parsed.every((parsed) => {
+      return this.schedulesFiltered.every((parsed) => {
         return parsed.loaded;
+      });
+    },
+
+    schedulesFiltered() {
+      return this.parsed.filter((parsed) => {
+        return this.filtered ? !parsed.empty : true;
       });
     },
   },
@@ -154,9 +183,38 @@ export default {
   display: flex;
   flex-direction: column;
 
-  select {
+  select,
+  button {
     margin: 0 0 1.5rem;
-    line-height: 1.65;
+    height: 4rem;
+  }
+
+  select {
+    flex: 1;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      stroke: #fff;
+    }
+  }
+
+  .inactive {
+    background-color: #e9e9ed;
+    border: 1px solid #ced4da;
+
+    svg {
+      stroke: #000;
+    }
+  }
+
+  button {
+    width: 4rem;
+    margin: 0 0 0 1rem;
   }
 
   .section {

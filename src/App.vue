@@ -149,7 +149,7 @@ select {
   font-size: 1.5rem;
   text-align: center;
   line-height: 1.5;
-  border-radius: 5rem;
+  border-radius: 1.5rem;
 }
 
 select {
