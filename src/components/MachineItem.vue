@@ -16,44 +16,47 @@
       </template>
 
       <div class="row">
-        <template v-if="isUsed">
-          <template v-if="isCardio">
-            <div class="labels">
-              <h3>Time</h3>
-              <h4>{{ time }}</h4>
-            </div>
+        <template v-if="isCardio">
+          <div class="labels">
+            <h3>Time</h3>
+            <h4>{{ time }}</h4>
+          </div>
 
+          <template v-if="isUsed">
             <div class="labels">
               <h3>Speed</h3>
               <h4>{{ entry.speed }}</h4>
-            </div>
-          </template>
-
-          <template v-else>
-            <div class="labels">
-              <h3>Sets</h3>
-              <h4>{{ sets }}</h4>
-            </div>
-
-            <div class="labels">
-              <h3>Reps</h3>
-              <h4>{{ reps }}</h4>
-            </div>
-
-            <div class="labels right">
-              <h3>Weight</h3>
-              <h4>{{ entry.weight }}</h4>
             </div>
           </template>
         </template>
 
         <template v-else>
           <div class="labels">
+            <h3>Sets</h3>
+            <h4>{{ sets }}</h4>
+          </div>
+
+          <div class="labels">
+            <h3>Reps</h3>
+            <h4>{{ reps }}</h4>
+          </div>
+          <template v-if="isUsed">
+            <div class="labels right">
+              <h3>Weight</h3>
+              <h4>{{ entry.weight }}</h4>
+            </div>
+          </template>
+        </template>
+      </div>
+
+      <template v-if="!isUsed">
+        <div class="row">
+          <div class="labels">
             <h3>There's a first for everything</h3>
             <h4>Goodluck!</h4>
           </div>
-        </template>
-      </div>
+        </div>
+      </template>
 
       <div class="row">
         <div class="labels">
