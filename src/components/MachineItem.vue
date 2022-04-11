@@ -190,7 +190,7 @@ export default {
         location: this.location.uuid,
       });
 
-      await fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, {
+      fetch(`${METHOD}://${DOMAIN}/${VERSION}/entry`, {
         headers,
         method,
         body,
