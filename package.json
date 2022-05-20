@@ -4,11 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "lint": "vue-cli-service lint",
-    "check": "vue-cli-service lint --check",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
+    "check": "vue-cli-service lint --check"
   },
   "dependencies": {
     "@capacitor/app": "1.1.1",
