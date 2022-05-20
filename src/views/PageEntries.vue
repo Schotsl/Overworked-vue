@@ -12,6 +12,8 @@
           <ion-title size="large">Entries</ion-title>
         </ion-toolbar>
       </ion-header>
+
+      <!-- <ion-loading /> -->
     </ion-content>
   </ion-page>
 </template>
@@ -25,6 +27,7 @@ export default defineComponent({
   name: 'PageEntries',
   components: {
     IonContent,
+    // IonLoading,
     IonHeader,
     IonPage,
     IonTitle,

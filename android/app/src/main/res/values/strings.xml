@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Overworked</string>
+    <string name="title_activity_main">Overworked</string>
+    <string name="package_name">com.sjorsvanholst.overworked</string>
+    <string name="custom_url_scheme">com.sjorsvanholst.overworked</string>
+</resources>

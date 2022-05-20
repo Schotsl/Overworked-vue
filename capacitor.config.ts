@@ -1,9 +1,9 @@
 import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  webDir: 'dist',
-  appName: 'myApp',
+  appId: 'com.sjorsvanholst.overworked',
+  appName: 'Overworked',
+  webDir: 'public',
   bundledWebRuntime: false
 };
 
