@@ -1,11 +1,15 @@
 <template>
   <ion-app>
     <ion-router-outlet />
-    <navigation-bar />
+
+    <template v-if="loggedIn">
+      <navigation-bar />
+    </template>
   </ion-app>
 </template>
 
 <script lang="ts">
+import { store } from "./store";
 import { defineComponent } from "vue";
 import { IonRouterOutlet, IonApp } from "@ionic/vue";
 
@@ -17,6 +21,12 @@ export default defineComponent({
     IonApp,
     IonRouterOutlet,
     NavigationBar,
+  },
+  computed: {
+    loggedIn() {
+      // TODO: Move this to the VueX store
+      return store.state.name && store.state.email && store.state.token;
+    },
   },
 });
 </script>
