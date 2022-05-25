@@ -5,6 +5,12 @@ const config: CapacitorConfig = {
   appName: "Overworked",
   webDir: "dist",
   bundledWebRuntime: false,
+  plugins: {
+    FirebaseAuthentication: {
+      skipNativeAuth: false,
+      providers: ["apple.com", "github.com", "google.com"],
+    },
+  },
 };
 
 export default config;
