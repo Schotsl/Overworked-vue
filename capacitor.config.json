@@ -1,8 +1,0 @@
-{
-  "plugins": {
-    "GoogleAuth": {
-      "scopes": ["profile", "email"],
-      "serverClientId": "863141653950-hodd959n5dtrbubu6c9onf7buvp6bjer.apps.googleusercontent.com"
-    }
-  }
-}
