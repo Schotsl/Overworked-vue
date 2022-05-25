@@ -9,38 +9,43 @@
       <div class="container">
         <ion-text class="title"> 🥳🎉 </ion-text>
 
-        <ion-button
-          size="large"
-          shape="round"
-          class="login"
-          expand="block"
-          @click="appleSignin"
-        >
-          <ion-icon slot="start" :icon="logoApple"></ion-icon>
-          Login using Apple
-        </ion-button>
+        <template v-if="loginLoading">
+          <ion-spinner name="dots" class="spinner"></ion-spinner>
+        </template>
+        <template v-else>
+          <ion-button
+            size="large"
+            shape="round"
+            class="login"
+            expand="block"
+            @click="appleSignin"
+          >
+            <ion-icon slot="start" :icon="logoApple"></ion-icon>
+            Login using Apple
+          </ion-button>
 
-        <ion-button
-          size="large"
-          shape="round"
-          class="login"
-          expand="block"
-          @click="googleSignin"
-        >
-          <ion-icon slot="start" :icon="logoGoogle"></ion-icon>
-          Login using Google
-        </ion-button>
+          <ion-button
+            size="large"
+            shape="round"
+            class="login"
+            expand="block"
+            @click="googleSignin"
+          >
+            <ion-icon slot="start" :icon="logoGoogle"></ion-icon>
+            Login using Google
+          </ion-button>
 
-        <ion-button
-          size="large"
-          shape="round"
-          class="login"
-          expand="block"
-          @click="githubSignin"
-        >
-          <ion-icon slot="start" :icon="logoGithub"></ion-icon>
-          Login using GitHub
-        </ion-button>
+          <ion-button
+            size="large"
+            shape="round"
+            class="login"
+            expand="block"
+            @click="githubSignin"
+          >
+            <ion-icon slot="start" :icon="logoGithub"></ion-icon>
+            Login using GitHub
+          </ion-button>
+        </template>
       </div>
     </ion-content>
   </ion-page>
@@ -65,18 +70,25 @@ import { defineComponent } from "vue";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { logoGoogle, logoApple, logoGithub } from "ionicons/icons";
 import {
-  IonButton,
-  IonPage,
-  IonContent,
-  IonIcon,
   IonText,
-  IonHeader,
-  IonToolbar,
+  IonIcon,
+  IonPage,
   IonTitle,
+  IonHeader,
+  IonButton,
+  IonSpinner,
+  IonToolbar,
+  IonContent,
 } from "@ionic/vue";
 
 export default defineComponent({
   name: "PageLogin",
+
+  data() {
+    return {
+      loginLoading: false,
+    };
+  },
 
   components: {
     IonText,
@@ -85,22 +97,26 @@ export default defineComponent({
     IonTitle,
     IonHeader,
     IonButton,
+    IonSpinner,
     IonToolbar,
     IonContent,
   },
 
   methods: {
     async appleSignin() {
-      const result = await FirebaseAuthentication.signInWithApple();
-      console.log(result);
+      this.loginLoading = true;
+      await FirebaseAuthentication.signInWithApple();
+      this.loginLoading = false;
     },
     async googleSignin() {
-      const result = await FirebaseAuthentication.signInWithGoogle();
-      console.log(result);
+      this.loginLoading = true;
+      await FirebaseAuthentication.signInWithGoogle();
+      this.loginLoading = false;
     },
     async githubSignin() {
-      const result = await FirebaseAuthentication.signInWithGithub();
-      console.log(result);
+      this.loginLoading = true;
+      await FirebaseAuthentication.signInWithGithub();
+      this.loginLoading = false;
     },
   },
 
@@ -124,6 +140,12 @@ export default defineComponent({
   width: 100%;
   margin: 0.75rem;
   font-size: 1.15rem;
+}
+
+.spinner {
+  width: 3em;
+  margin: 6rem;
+  height: 3em;
 }
 
 .container {
