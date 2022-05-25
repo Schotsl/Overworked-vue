@@ -5,7 +5,7 @@
         <ion-title>Entries</ion-title>
       </ion-toolbar>
     </ion-header>
-    
+
     <ion-content :fullscreen="true">
       <ion-header collapse="condense">
         <ion-toolbar>
@@ -19,12 +19,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-
+import { defineComponent } from "vue";
+import {
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+} from "@ionic/vue";
 
 export default defineComponent({
-  name: 'PageEntries',
+  name: "PageEntries",
   components: {
     IonContent,
     // IonLoading,
@@ -39,7 +44,7 @@ export default defineComponent({
 <style scoped>
 #container {
   text-align: center;
-  
+
   position: absolute;
   left: 0;
   right: 0;
@@ -55,9 +60,9 @@ export default defineComponent({
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
+
   color: #8c8c8c;
-  
+
   margin: 0;
 }
 

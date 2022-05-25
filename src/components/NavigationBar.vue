@@ -1,10 +1,10 @@
 <template>
   <ion-tabs>
     <ion-router-outlet>
-      <Route path='/settings' component={PageSettings} exact />
-      <Route path='/schedule' component={PageSchedule} exact />
-      <Route path='/entries' component={PageEntries} exact />
-      <Route path='/friends' component={PageFriends} exact />
+      <Route path="/settings" component="{PageSettings}" exact />
+      <Route path="/schedule" component="{PageSchedule}" exact />
+      <Route path="/entries" component="{PageEntries}" exact />
+      <Route path="/friends" component="{PageFriends}" exact />
     </ion-router-outlet>
 
     <ion-tab-bar slot="bottom">
@@ -32,20 +32,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { 
+import { defineComponent } from "vue";
+import {
   IonIcon,
   IonTabs,
-  IonLabel, 
-  IonTabBar, 
-  IonTabButton, 
-  IonRouterOutlet
-} from '@ionic/vue';
-import { cogOutline, calendarOutline, peopleOutline, listOutline } from 'ionicons/icons';
-
+  IonLabel,
+  IonTabBar,
+  IonTabButton,
+  IonRouterOutlet,
+} from "@ionic/vue";
+import {
+  cogOutline,
+  calendarOutline,
+  peopleOutline,
+  listOutline,
+} from "ionicons/icons";
 
 export default defineComponent({
-  name: 'NavigationBar',
+  name: "NavigationBar",
 
   components: {
     IonIcon,
@@ -62,19 +66,20 @@ export default defineComponent({
       listOutline,
       peopleOutline,
       calendarOutline,
-    }
-  }
+    };
+  },
 });
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-  
+
   position: absolute;
   left: 0;
   right: 0;
   top: 50%;
+  background-color: red;
   transform: translateY(-50%);
 }
 
@@ -86,9 +91,9 @@ export default defineComponent({
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
+
   color: #8c8c8c;
-  
+
   margin: 0;
 }
 
