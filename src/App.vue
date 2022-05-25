@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { store } from "./store";
+// import { store } from "./store";
 import { defineComponent } from "vue";
 import { IonRouterOutlet, IonApp } from "@ionic/vue";
 
@@ -25,7 +25,12 @@ export default defineComponent({
   computed: {
     loggedIn() {
       // TODO: Move this to the VueX store
-      return store.state.name && store.state.email && store.state.token;
+      return (
+        // store.state.user.name &&
+        // store.state.user.email &&
+        // store.state.user.token
+        true
+      );
     },
   },
 });
