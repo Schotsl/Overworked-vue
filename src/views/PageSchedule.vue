@@ -77,22 +77,36 @@
 import { defineComponent } from "vue";
 import {
   IonPage,
+  IonList,
+  IonItem,
   IonTitle,
+  IonLabel,
+  IonRadio,
   IonHeader,
+  IonSelect,
   IonToolbar,
-  IonContent,
   IonCheckbox,
+  IonRadioGroup,
+  IonListHeader,
+  IonSelectOption,
 } from "@ionic/vue";
 
 export default defineComponent({
   name: "PageSchedule",
   components: {
     IonPage,
+    IonList,
+    IonItem,
     IonTitle,
+    IonLabel,
+    IonRadio,
     IonHeader,
-    IonContent,
+    IonSelect,
     IonToolbar,
     IonCheckbox,
+    IonRadioGroup,
+    IonListHeader,
+    IonSelectOption,
   },
 });
 </script>
