@@ -8,7 +8,6 @@
 
 <script lang="ts">
 import { isPlatform } from "@ionic/vue";
-import { store } from "../store";
 import { GoogleAuth } from "@codetrix-studio/capacitor-google-auth";
 import { defineComponent } from "vue";
 import { IonButton, IonPage } from "@ionic/vue";
@@ -16,8 +15,8 @@ import { IonButton, IonPage } from "@ionic/vue";
 export default defineComponent({
   name: "PageLogin",
   components: {
-    IonButton,
     IonPage,
+    IonButton,
   },
   methods: {
     async googleSignin() {

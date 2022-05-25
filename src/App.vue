@@ -6,9 +6,10 @@
 </template>
 
 <script lang="ts">
-import { IonApp, IonRouterOutlet } from "@ionic/vue";
-import NavigationBar from "./components/NavigationBar.vue";
 import { defineComponent } from "vue";
+import { IonRouterOutlet, IonApp } from "@ionic/vue";
+
+import NavigationBar from "./components/NavigationBar.vue";
 
 export default defineComponent({
   name: "App",
