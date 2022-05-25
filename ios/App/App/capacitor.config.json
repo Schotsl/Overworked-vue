@@ -2,8 +2,5 @@
 	"appId": "com.sjorsvanholst.overworked",
 	"appName": "Overworked",
 	"webDir": "public",
-	"bundledWebRuntime": false,
-	"server": {
-		"url": "http://192.168.186.36:8100"
-	}
+	"bundledWebRuntime": false
 }
