@@ -1,15 +1,17 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router";
 import { RouteRecordRaw } from "vue-router";
 
+import PageLogin from "../views/PageLogin.vue";
 import PageEntries from "../views/PageEntries.vue";
-import PageSchedule from "../views/PageSchedule.vue";
 import PageFriends from "../views/PageFriends.vue";
+import PageSchedule from "../views/PageSchedule.vue";
 import PageSettings from "../views/PageSettings.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    redirect: "/schedule",
+    name: "Login",
+    component: PageLogin,
   },
   {
     path: "/entries",
