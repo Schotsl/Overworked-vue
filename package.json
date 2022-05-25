@@ -4,9 +4,9 @@
   "version": "1.0.0",
   "scripts": {
     "lint": "vue-cli-service lint",
+    "check": "vue-cli-service lint --check",
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "check": "vue-cli-service lint --check"
+    "build": "vue-cli-service build"
   },
   "dependencies": {
     "@capacitor/android": "^3.5.1",
