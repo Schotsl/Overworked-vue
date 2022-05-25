@@ -12,7 +12,8 @@
           <ion-title size="large">Friends</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-list>
+
+      <ion-list v-if="friends.length > 0">
         <ion-item v-for="friend in friends" :key="friend.uuid">
           <ion-avatar slot="start">
             <img :src="friend.iconUrl ?? 'https://via.placeholder.com/50x50'" />
@@ -21,6 +22,18 @@
             <h2>{{ friend.first }} {{ friend.last }}</h2>
           </ion-label>
         </ion-item>
+      </ion-list>
+      <ion-list v-else>
+        <div class="skeleton-friends">
+          <ion-item v-for="i in 5" :key="i">
+            <ion-avatar slot="start">
+              <ion-skeleton-text></ion-skeleton-text>
+            </ion-avatar>
+            <ion-label>
+              <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </div>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -38,6 +51,7 @@ import {
   IonItem,
   IonAvatar,
   IonLabel,
+  IonSkeletonText,
 } from "@ionic/vue";
 
 import store from "@/store";
@@ -54,6 +68,7 @@ export default defineComponent({
     IonItem,
     IonAvatar,
     IonLabel,
+    IonSkeletonText,
   },
   data: () => ({
     store,
