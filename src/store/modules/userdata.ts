@@ -55,7 +55,7 @@ const modules = defineModule({
         "https://api.overworked.sjorsvanholst.nl/v1/machine?limit=99",
         {
           headers: {
-            Authentication: `Bearer ${rootState.authentication.token}`,
+            Authorization: `Bearer ${rootState.authentication.token}`,
           },
         }
       );
