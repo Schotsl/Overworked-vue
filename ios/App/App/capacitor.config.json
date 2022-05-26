@@ -2,5 +2,15 @@
 	"appId": "com.sjorsvanholst.overworked",
 	"appName": "Overworked",
 	"webDir": "dist",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+	"plugins": {
+		"FirebaseAuthentication": {
+			"skipNativeAuth": false,
+			"providers": [
+				"apple.com",
+				"github.com",
+				"google.com"
+			]
+		}
+	}
 }
