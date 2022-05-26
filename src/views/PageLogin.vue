@@ -104,7 +104,8 @@ export default defineComponent({
     async googleSignin() {
       this.loginLoading = true;
 
-      const { credential, user } = await FirebaseAuthentication.signInWithGoogle();
+      const { credential, user } =
+        await FirebaseAuthentication.signInWithGoogle();
 
       if (!credential?.idToken) {
         throw new Error("Google sign in failed");
@@ -119,10 +120,13 @@ export default defineComponent({
       const method = "POST";
       const headers = {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${credential?.idToken}`,
+        Authorization: `Bearer ${credential?.idToken}`,
       };
 
-      const response = await fetch(`https://api.overworked.sjorsvanholst.nl/v1/person`, { method, headers, body });
+      const response = await fetch(
+        `https://api.overworked.sjorsvanholst.nl/v1/person`,
+        { method, headers, body }
+      );
       const parsed = await response.json();
 
       await store.dispatch.authentication.SAVE_AUTH({
@@ -130,7 +134,7 @@ export default defineComponent({
         token: credential!.idToken!,
       });
 
-      router.push('/entries');
+      router.push("/entries");
     },
   },
 
