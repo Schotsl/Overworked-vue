@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <friend-search-modal v-if="searchModal" @close="searchModal = false" />
+      <friend-search-modal v-if="searchModal" @closed="searchModal = false" />
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button @click="searchModal = true">
           <ion-icon :icon="add" />

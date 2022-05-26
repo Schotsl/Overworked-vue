@@ -1,9 +1,9 @@
 <template>
-  <ion-modal :is-open="true">
+  <ion-modal :is-open="true" @didDismiss="closed()">
     <ion-header>
       <ion-toolbar>
         <ion-title>Search for friends</ion-title>
-        <ion-button slot="end" fill="clear" size="small" @click="close">
+        <ion-button slot="end" fill="clear" size="small" @click="closed()">
           Close
         </ion-button>
       </ion-toolbar>
@@ -59,10 +59,10 @@ export default defineComponent({
     IonButton,
   },
   methods: {
-    close() {
-      this.$emit("close");
+    closed() {
+      this.$emit("closed");
     },
   },
-  emits: ["close"],
+  emits: ["closed"],
 });
 </script>
