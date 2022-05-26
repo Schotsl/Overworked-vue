@@ -31,6 +31,7 @@ export default defineComponent({
     loading: true,
   }),
   async created() {
+    window.screen.orientation.lock("portrait");
     // Initialize local storage
     await ionicStore.init();
 
