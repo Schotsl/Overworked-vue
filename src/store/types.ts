@@ -10,3 +10,17 @@ export interface Machine {
   reps: number;
   sets: number;
 }
+
+export interface PersonCollection {
+  persons: Person[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface MachineCollection {
+  machines: Machine[];
+  total: number;
+  offset: number;
+  limit: number;
+}

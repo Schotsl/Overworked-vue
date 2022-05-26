@@ -20,13 +20,13 @@ class FetchError extends Error {
   }
 }
 
-class ResponseTypeError extends FetchError {
+export class ResponseTypeError extends FetchError {
   constructor(response: Response) {
     super(`Response content type was not application/json`, response);
   }
 }
 
-class JSONParsingError extends FetchError {
+export class JSONParsingError extends FetchError {
   constructor(response: Response) {
     super(`ResponseBody could not be JSON parsed`, response);
   }
@@ -34,7 +34,7 @@ class JSONParsingError extends FetchError {
 
 export async function getRequest<ResponseBody>(
   url: string,
-  additionalOptions: RequestInit
+  additionalOptions: RequestInit = {}
 ) {
   const jwtToken = store.state.authentication.token;
   const authenticationHeaders = new Headers();
@@ -66,7 +66,7 @@ export async function getRequest<ResponseBody>(
 
 export async function postRequest<ResponseBody>(
   url: string,
-  additionalOptions: RequestInit
+  additionalOptions: RequestInit = {}
 ) {
   const jwtToken = store.state.authentication.token;
   const authenticationHeaders = new Headers();

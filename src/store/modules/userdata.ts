@@ -1,7 +1,8 @@
 import { defineModule } from "direct-vuex";
+import { getRequest } from "../fetch";
 import { moduleActionContext, moduleGetterContext } from "../index";
 
-import { Person, Machine } from "../types";
+import { Person, Machine, PersonCollection, MachineCollection } from "../types";
 
 export interface UserDataState {
   friends: Person[];
@@ -37,35 +38,20 @@ const modules = defineModule({
     async FETCH_FRIENDS(context) {
       const { commit, rootState } = actionContext(context);
 
-      const response = await fetch(
-        `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`,
-        {
-          headers: {
-            Authorization: `Bearer ${rootState.authentication.token}`,
-          },
-        }
+      const responseBody = await getRequest<PersonCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`
       );
 
-      if (!response.ok) {
-        return;
-      }
-
-      const data = await response.json();
-      commit.SET_FRIENDS(data.persons);
+      commit.SET_FRIENDS(responseBody.persons);
     },
     async FETCH_MACHINES(context) {
       const { commit, rootState } = actionContext(context);
-      const response = await fetch(
-        "https://api.overworked.sjorsvanholst.nl/v1/machine?limit=99",
-        {
-          headers: {
-            Authorization: `Bearer ${rootState.authentication.token}`,
-          },
-        }
+
+      const responseBody = await getRequest<MachineCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${rootState.authentication.user?.uuid}`
       );
 
-      const data = await response.json();
-      commit.SET_MACHINES(data.machines);
+      commit.SET_MACHINES(responseBody.machines);
     },
   },
   namespaced: true,
