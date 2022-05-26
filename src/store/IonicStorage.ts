@@ -15,7 +15,7 @@ export class IonicStorage {
     return this._storage instanceof Storage;
   }
 
-  public set(key: string, value: never) {
+  public set(key: string, value: unknown) {
     if (!this.isInitialized()) {
       throw new Error("IonicStorage is not initialized");
     }
@@ -27,5 +27,12 @@ export class IonicStorage {
       throw new Error("IonicStorage is not initialized");
     }
     return this._storage!.get(key);
+  }
+
+  public remove(key: string) {
+    if (!this.isInitialized()) {
+      throw new Error("IonicStorage is not initialized");
+    }
+    return this._storage!.remove(key);
   }
 }

@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-// import { store } from "./store";
+import store, { ionicStore } from "./store";
 import { defineComponent } from "vue";
 import { IonRouterOutlet, IonApp } from "@ionic/vue";
 
@@ -24,14 +24,16 @@ export default defineComponent({
   },
   computed: {
     loggedIn() {
-      // TODO: Move this to the VueX store
-      return (
-        // store.state.user.name &&
-        // store.state.user.email &&
-        // store.state.user.token
-        true
-      );
+      return store.getters.authentication.isLoggedIn;
     },
+  },
+  async beforeMount() {
+    // Initialize local storage
+    await ionicStore.init();
+
+    // Get authorized user from local storage
+    await store.dispatch.authentication.RESTORE_AUTH();
   },
 });
 </script>
+>

@@ -81,6 +81,8 @@ import {
   IonContent,
 } from "@ionic/vue";
 
+import store from "@/store";
+
 export default defineComponent({
   name: "PageLogin",
 
@@ -110,7 +112,21 @@ export default defineComponent({
     },
     async googleSignin() {
       this.loginLoading = true;
-      await FirebaseAuthentication.signInWithGoogle();
+      const response = await FirebaseAuthentication.signInWithGoogle();
+
+      if (!response.credential?.idToken)
+        throw new Error("Google sign in failed");
+
+      await store.dispatch.authentication.SAVE_AUTH({
+        user: {
+          first: "Beta",
+          last: "User",
+          uuid: "b4040eb2-f5ee-44e7-b286-9e32759c8ff1",
+          iconUrl: "https://via.placeholder.com/50x50",
+        },
+        token: response.credential?.idToken,
+      });
+
       this.loginLoading = false;
     },
     async githubSignin() {

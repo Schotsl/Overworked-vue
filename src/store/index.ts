@@ -6,10 +6,6 @@ import { IonicStorage } from "./IonicStorage";
 
 export const ionicStore = new IonicStorage();
 
-(async () => {
-  await ionicStore.init();
-})();
-
 const {
   store,
   rootActionContext,

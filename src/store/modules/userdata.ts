@@ -3,10 +3,6 @@ import { moduleActionContext, moduleGetterContext } from "../index";
 
 import { Person, Machine } from "../types";
 
-const getterContext = (args: [any, any, any, any]) =>
-  moduleGetterContext(args, modules);
-const actionContext = (context: any) => moduleActionContext(context, modules);
-
 export interface UserDataState {
   friends: Person[];
   machines: Machine[];
@@ -59,5 +55,9 @@ const modules = defineModule({
   },
   namespaced: true,
 });
+
+const getterContext = (args: [any, any, any, any]) =>
+  moduleGetterContext(args, modules);
+const actionContext = (context: any) => moduleActionContext(context, modules);
 
 export default modules;

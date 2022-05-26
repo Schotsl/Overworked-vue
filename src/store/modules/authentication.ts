@@ -1,9 +1,7 @@
 import { defineModule } from "direct-vuex";
 
 import { Person } from "../types";
-import { moduleActionContext, ionicStore } from "../index";
-
-const actionContext = (context: any) => moduleActionContext(context, modules);
+import { moduleActionContext, moduleGetterContext, ionicStore } from "../index";
 
 export interface UserState {
   user: Person | null;
@@ -17,11 +15,17 @@ const modules = defineModule({
       token: null,
     };
   },
+  getters: {
+    isLoggedIn: (...args): boolean => {
+      const { state } = getterContext(args);
+      return state.token !== null && state.user !== null;
+    },
+  },
   mutations: {
-    SET_USER(state, user: Person) {
+    SET_USER(state, user: Person | null) {
       state.user = user;
     },
-    SET_TOKEN(state, token: string) {
+    SET_TOKEN(state, token: string | null) {
       state.token = token;
     },
   },
@@ -42,8 +46,30 @@ const modules = defineModule({
       commit.SET_USER(user);
       return true;
     },
+    async SAVE_AUTH(context, { user, token }: { user: Person; token: string }) {
+      const { commit } = actionContext(context);
+
+      commit.SET_TOKEN(token);
+      commit.SET_USER(user);
+
+      await ionicStore.set("user", user);
+      await ionicStore.set("token", token);
+    },
+    async LOGOUT(context) {
+      const { commit } = actionContext(context);
+
+      commit.SET_TOKEN(null);
+      commit.SET_USER(null);
+
+      await ionicStore.remove("user");
+      await ionicStore.remove("token");
+    },
   },
   namespaced: true,
 });
+
+const getterContext = (args: [any, any, any, any]) =>
+  moduleGetterContext(args, modules);
+const actionContext = (context: any) => moduleActionContext(context, modules);
 
 export default modules;
