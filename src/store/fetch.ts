@@ -1,8 +1,8 @@
-const baseGetHeaders = new Headers();
-baseGetHeaders.set("Content-Type", "application/json");
+import store from "./index";
 
 const baseGetOptions: RequestInit = {
-  headers: baseGetHeaders,
+  method: "GET",
+};
 };
 
 class FetchError extends Error {
@@ -28,7 +28,36 @@ class JSONParsingError extends FetchError {
 
 export async function getRequest<ResponseBody>(
   url: string,
-  options: RequestInit
+  additionalOptions: RequestInit
+) {
+  const jwtToken = store.state.authentication.token;
+  const authenticationHeaders = new Headers();
+
+  if (jwtToken)
+    authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+
+  const requestOptions = Object.assign(
+    {},
+    baseGetOptions,
+    { headers: authenticationHeaders },
+    additionalOptions
+  );
+
+  const response = await fetch(url, requestOptions);
+
+  if (
+    !response.ok ||
+    response.headers.get("Content-Type") === "application/json"
+  )
+    throw new ResponseTypeError(response);
+
+  const body = (await response.json().catch(() => {
+    throw new JSONParsingError(response);
+  })) as ResponseBody;
+
+  return body;
+}
+
 ) {
   const response = await fetch(url, Object.assign({}, baseGetOptions, options));
 
