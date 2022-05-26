@@ -7,6 +7,13 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
+      <friend-search-modal v-if="searchModal" @close="searchModal = false" />
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button @click="searchModal = true">
+          <ion-icon :icon="add" />
+        </ion-fab-button>
+      </ion-fab>
+
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Friends</ion-title>
@@ -53,9 +60,15 @@ import {
   IonLabel,
   IonSkeletonText,
   onIonViewWillEnter,
+  IonFab,
+  IonFabButton,
+  IonIcon,
 } from "@ionic/vue";
 
+import { add } from "ionicons/icons";
+
 import store from "@/store";
+import FriendSearchModal from "../components/FriendSearchModal.vue";
 
 export default defineComponent({
   name: "PageFriends",
@@ -70,9 +83,15 @@ export default defineComponent({
     IonAvatar,
     IonLabel,
     IonSkeletonText,
+    IonFab,
+    IonFabButton,
+    FriendSearchModal,
+    IonIcon,
   },
   data: () => ({
     store,
+    add,
+    searchModal: false,
   }),
   computed: {
     friends() {
