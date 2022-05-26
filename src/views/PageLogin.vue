@@ -34,17 +34,6 @@
             <ion-icon slot="start" :icon="logoGoogle"></ion-icon>
             Login using Google
           </ion-button>
-
-          <ion-button
-            size="large"
-            shape="round"
-            class="login"
-            expand="block"
-            @click="githubSignin"
-          >
-            <ion-icon slot="start" :icon="logoGithub"></ion-icon>
-            Login using GitHub
-          </ion-button>
         </template>
       </div>
     </ion-content>
@@ -68,7 +57,7 @@ initializeApp(firebaseConfig);
 
 import { defineComponent } from "vue";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
-import { logoGoogle, logoApple, logoGithub } from "ionicons/icons";
+import { logoGoogle, logoApple } from "ionicons/icons";
 import {
   IonText,
   IonIcon,
@@ -129,18 +118,12 @@ export default defineComponent({
 
       this.loginLoading = false;
     },
-    async githubSignin() {
-      this.loginLoading = true;
-      await FirebaseAuthentication.signInWithGithub();
-      this.loginLoading = false;
-    },
   },
 
   setup() {
     return {
       logoApple,
       logoGoogle,
-      logoGithub,
     };
   },
 });
