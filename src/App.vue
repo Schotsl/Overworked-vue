@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <ion-tabs>
+    <ion-tabs v-if="!loading">
       <ion-router-outlet />
       <navigation-bar v-if="loggedIn" />
     </ion-tabs>
