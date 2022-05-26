@@ -13,6 +13,7 @@ import { defineComponent } from "vue";
 import { IonApp, IonTabs, IonRouterOutlet } from "@ionic/vue";
 
 import NavigationBar from "./components/NavigationBar.vue";
+import router from "./router";
 
 export default defineComponent({
   name: "App",
@@ -37,6 +38,11 @@ export default defineComponent({
 
     // Get authorized user from local storage
     await store.dispatch.authentication.RESTORE_AUTH();
+
+    // Send user to login if the storage was empty
+    if (!store.getters.authentication.isLoggedIn) {
+      router.push("/");
+    }
     this.loading = false;
   },
 });
