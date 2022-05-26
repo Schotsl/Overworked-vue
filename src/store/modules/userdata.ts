@@ -1,51 +1,39 @@
 import { defineModule } from "direct-vuex";
 import { moduleActionContext, moduleGetterContext } from "../index";
 
+import { Person, Machine } from "../types";
+
 const getterContext = (args: [any, any, any, any]) =>
   moduleGetterContext(args, modules);
 const actionContext = (context: any) => moduleActionContext(context, modules);
 
-interface Friend {
-  first: string;
-  last: string;
-  uuid: string;
-  iconUrl: string | undefined;
-}
-
-interface Machines {
-  uuid: string;
-  title: string;
-  reps: number;
-  sets: number;
-}
-
-export interface GymState {
-  friends: Friend[];
-  machines: Machines[];
+export interface UserDataState {
+  friends: Person[];
+  machines: Machine[];
 }
 
 const modules = defineModule({
-  state: (): GymState => {
+  state: (): UserDataState => {
     return {
       friends: [],
       machines: [],
     };
   },
   getters: {
-    friends(...args): Friend[] {
+    friends(...args): Person[] {
       const { state } = getterContext(args);
       return state.friends;
     },
-    machines(...args): Machines[] {
+    machines(...args): Machine[] {
       const { state } = getterContext(args);
       return state.machines;
     },
   },
   mutations: {
-    SET_FRIENDS(state, friends: Friend[]) {
+    SET_FRIENDS(state, friends: Person[]) {
       state.friends = friends;
     },
-    SET_MACHINES(state, machines: Machines[]) {
+    SET_MACHINES(state, machines: Machine[]) {
       state.machines = machines;
     },
   },

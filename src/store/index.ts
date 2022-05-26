@@ -1,7 +1,14 @@
 import { createDirectStore } from "direct-vuex";
 
-import gym from "./modules/gym";
-import user from "./modules/user";
+import userdata from "./modules/userdata";
+import authentication from "./modules/authentication";
+import { IonicStorage } from "./IonicStorage";
+
+export const ionicStore = new IonicStorage();
+
+(async () => {
+  await ionicStore.init();
+})();
 
 const {
   store,
@@ -11,8 +18,8 @@ const {
   moduleGetterContext,
 } = createDirectStore({
   modules: {
-    gym,
-    user,
+    userdata,
+    authentication,
   },
 });
 

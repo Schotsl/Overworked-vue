@@ -75,16 +75,16 @@ export default defineComponent({
   }),
   methods: {
     async fetchFriends() {
-      await store.dispatch.gym.FETCH_FRIENDS();
+      await store.dispatch.userdata.FETCH_FRIENDS();
     },
   },
   computed: {
     friends() {
-      return store.state.gym.friends;
+      return store.state.userdata.friends;
     },
   },
   mounted() {
-    if (store.state.gym.friends.length === 0) {
+    if (store.state.userdata.friends.length === 0) {
       this.fetchFriends();
     }
   },
