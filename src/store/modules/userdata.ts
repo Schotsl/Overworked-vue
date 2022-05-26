@@ -35,18 +35,29 @@ const modules = defineModule({
   },
   actions: {
     async FETCH_FRIENDS(context) {
-      const { commit } = actionContext(context);
+      const { commit, rootState } = actionContext(context);
+
       const response = await fetch(
-        "https://api.overworked.sjorsvanholst.nl/v1/person?limit=99"
+        `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`,
+        {
+          headers: {
+            Authorization: `Bearer ${rootState.authentication.token}`,
+          },
+        }
       );
 
       const data = await response.json();
       commit.SET_FRIENDS(data.persons);
     },
     async FETCH_MACHINES(context) {
-      const { commit } = actionContext(context);
+      const { commit, rootState } = actionContext(context);
       const response = await fetch(
-        "https://api.overworked.sjorsvanholst.nl/v1/machine?limit=99"
+        "https://api.overworked.sjorsvanholst.nl/v1/machine?limit=99",
+        {
+          headers: {
+            Authentication: `Bearer ${rootState.authentication.token}`,
+          },
+        }
       );
 
       const data = await response.json();

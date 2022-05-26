@@ -52,6 +52,7 @@ import {
   IonAvatar,
   IonLabel,
   IonSkeletonText,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 
 import store from "@/store";
@@ -73,20 +74,18 @@ export default defineComponent({
   data: () => ({
     store,
   }),
-  methods: {
-    async fetchFriends() {
-      await store.dispatch.userdata.FETCH_FRIENDS();
-    },
-  },
   computed: {
     friends() {
       return store.state.userdata.friends;
     },
   },
-  mounted() {
-    if (store.state.userdata.friends.length === 0) {
-      this.fetchFriends();
-    }
+  setup() {
+    onIonViewWillEnter(async () => {
+      console.log("PageFriends:onIonViewWillEnter");
+      if (store.state.userdata.friends.length === 0) {
+        await store.dispatch.userdata.FETCH_FRIENDS();
+      }
+    });
   },
 });
 </script>

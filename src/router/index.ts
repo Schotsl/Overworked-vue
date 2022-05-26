@@ -6,6 +6,7 @@ import PageEntries from "../views/PageEntries.vue";
 import PageFriends from "../views/PageFriends.vue";
 import PageSchedule from "../views/PageSchedule.vue";
 import PageSettings from "../views/PageSettings.vue";
+import PageStart from "../views/PageStart.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -32,6 +33,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/settings",
     name: "Settings",
     component: PageSettings,
+  },
+  {
+    path: "/start",
+    name: "Start",
+    component: PageStart,
   },
 ];
 
