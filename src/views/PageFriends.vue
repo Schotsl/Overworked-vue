@@ -16,10 +16,10 @@
       <ion-list v-if="friends.length > 0">
         <ion-item v-for="friend in friends" :key="friend.uuid">
           <ion-avatar slot="start">
-            <img :src="friend.iconUrl ?? 'https://via.placeholder.com/50x50'" />
+            <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
           </ion-avatar>
           <ion-label>
-            <h2>{{ friend.first }} {{ friend.last }}</h2>
+            <h2>{{ friend.name }}</h2>
           </ion-label>
         </ion-item>
       </ion-list>

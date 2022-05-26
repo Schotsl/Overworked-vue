@@ -13,7 +13,7 @@
         </ion-toolbar>
       </ion-header>
       <ion-item>
-        <ion-label>{{ fullName }}</ion-label>
+        <ion-label>{{ name }}</ion-label>
         <ion-button slot="end" fill="clear" size="small" @click="logout">
           Logout
         </ion-button>
@@ -58,8 +58,8 @@ export default defineComponent({
     },
   },
   computed: {
-    fullName() {
-      return `${store.state.authentication.user?.first} ${store.state.authentication.user?.last}`;
+    name() {
+      return `${store.state.authentication.user?.name}`;
     },
   },
 });

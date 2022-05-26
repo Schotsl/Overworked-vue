@@ -1,8 +1,7 @@
 export interface Person {
-  first: string;
-  last: string;
+  name: string;
   uuid: string;
-  iconUrl: string | undefined;
+  photo: string | undefined;
 }
 
 export interface Machine {
