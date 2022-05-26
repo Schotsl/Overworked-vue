@@ -46,6 +46,10 @@ const modules = defineModule({
         }
       );
 
+      if (!response.ok) {
+        return;
+      }
+
       const data = await response.json();
       commit.SET_FRIENDS(data.persons);
     },
