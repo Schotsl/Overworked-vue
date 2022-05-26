@@ -3,6 +3,12 @@ import store from "./index";
 const baseGetOptions: RequestInit = {
   method: "GET",
 };
+
+const basePostOptions: RequestInit = {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
 };
 
 class FetchError extends Error {
@@ -58,8 +64,24 @@ export async function getRequest<ResponseBody>(
   return body;
 }
 
+export async function postRequest<ResponseBody>(
+  url: string,
+  additionalOptions: RequestInit
 ) {
-  const response = await fetch(url, Object.assign({}, baseGetOptions, options));
+  const jwtToken = store.state.authentication.token;
+  const authenticationHeaders = new Headers();
+
+  if (jwtToken)
+    authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+
+  const requestOptions = Object.assign(
+    {},
+    basePostOptions,
+    { headers: authenticationHeaders },
+    additionalOptions
+  );
+
+  const response = await fetch(url, requestOptions);
 
   if (
     !response.ok ||
