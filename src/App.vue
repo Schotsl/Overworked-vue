@@ -32,7 +32,11 @@ export default defineComponent({
     loading: true,
   }),
   async created() {
-    window.screen.orientation.lock("portrait");
+    try {
+      await window.screen.orientation.lock("portrait");
+    } catch (error) {
+      console.error("Could not lock screen orientation, are we in a browser?");
+    }
     // Initialize local storage
     await ionicStore.init();
 
