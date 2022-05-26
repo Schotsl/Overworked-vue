@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { initializeApp, FirebaseOptions } from "firebase/app";
+import router from "../router";
 
 // TODO: This should be moved to a .env file
 const firebaseConfig: FirebaseOptions = {
@@ -58,6 +58,7 @@ initializeApp(firebaseConfig);
 import { defineComponent } from "vue";
 import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { logoGoogle, logoApple } from "ionicons/icons";
+import { initializeApp, FirebaseOptions } from "firebase/app";
 import {
   IonText,
   IonIcon,
@@ -96,27 +97,40 @@ export default defineComponent({
   methods: {
     async appleSignin() {
       this.loginLoading = true;
-      await FirebaseAuthentication.signInWithApple();
-      this.loginLoading = false;
+      // await FirebaseAuthentication.signInWithApple();
+      // this.loginLoading = false;
     },
+
     async googleSignin() {
       this.loginLoading = true;
 
-      const response = await FirebaseAuthentication.signInWithGoogle();
+      const { credential, user } = await FirebaseAuthentication.signInWithGoogle();
 
-      if (!response.credential?.idToken)
+      if (!credential?.idToken) {
         throw new Error("Google sign in failed");
+      }
 
-      await store.dispatch.authentication.SAVE_AUTH({
-        user: {
-          name: "User",
-          uuid: "b4040eb2-f5ee-44e7-b286-9e32759c8ff1",
-          photo: "https://via.placeholder.com/50x50",
-        },
-        token: response.credential?.idToken,
+      const body = JSON.stringify({
+        name: user?.displayName,
+        email: user?.email,
+        photo: user?.photoUrl,
       });
 
-      this.loginLoading = false;
+      const method = "POST";
+      const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${credential?.idToken}`,
+      };
+
+      const response = await fetch(`https://api.overworked.sjorsvanholst.nl/v1/person`, { method, headers, body });
+      const parsed = await response.json();
+
+      await store.dispatch.authentication.SAVE_AUTH({
+        user: parsed,
+        token: credential!.idToken!,
+      });
+
+      router.push('/entries');
     },
   },
 
