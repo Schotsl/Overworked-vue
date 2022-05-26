@@ -69,9 +69,10 @@ import {
   IonSpinner,
   IonToolbar,
   IonContent,
+  onIonViewWillEnter,
 } from "@ionic/vue";
 
-import store from "@/store";
+import store, { ionicStore } from "@/store";
 
 export default defineComponent({
   name: "PageLogin",
@@ -79,6 +80,7 @@ export default defineComponent({
   data() {
     return {
       loginLoading: false,
+      store,
     };
   },
 
@@ -139,6 +141,17 @@ export default defineComponent({
   },
 
   setup() {
+    onIonViewWillEnter(async () => {
+      // Initialize local storage
+      await ionicStore.init();
+
+      // Get authorized user from local storage
+      await store.dispatch.authentication.RESTORE_AUTH();
+      if (store.getters.authentication.isLoggedIn) {
+        console.log("PageLogin:onIonViewWillEnter:alreadyLoggedIn");
+        router.push("/entries");
+      }
+    });
     return {
       logoApple,
       logoGoogle,
