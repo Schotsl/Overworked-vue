@@ -32,6 +32,20 @@
           </ion-item>
         </ion-radio-group>
       </ion-list>
+      <ion-list>
+        <ion-item>
+          <ion-label>Day</ion-label>
+          <ion-select value="0" ok-text="Okay" cancel-text="Dismiss">
+            <ion-select-option value="0">Monday</ion-select-option>
+            <ion-select-option value="1">Tuesday</ion-select-option>
+            <ion-select-option value="2">Wednesday</ion-select-option>
+            <ion-select-option value="3">Thursday</ion-select-option>
+            <ion-select-option value="4">Friday</ion-select-option>
+            <ion-select-option value="5">Saturday</ion-select-option>
+            <ion-select-option value="6">Sunday</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -53,6 +67,8 @@ import {
   IonCheckbox,
   IonRadio,
   IonRadioGroup,
+  IonSelect,
+  IonSelectOption,
 } from "@ionic/vue";
 import store from "@/store";
 
@@ -81,6 +97,8 @@ export default defineComponent({
     IonCheckbox,
     IonRadio,
     IonRadioGroup,
+    IonSelect,
+    IonSelectOption,
   },
   computed: {
     personList() {
