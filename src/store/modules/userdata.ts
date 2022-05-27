@@ -1,5 +1,5 @@
 import { defineModule } from "direct-vuex";
-import { getRequest } from "../fetch";
+import { getRequest, postRequest } from "../fetch";
 import { moduleActionContext, moduleGetterContext } from "../index";
 
 import {
@@ -53,6 +53,15 @@ const modules = defineModule({
     SET_LOCATIONS(state, locations: Location[]) {
       state.locations = locations;
     },
+    ADD_FRIENDS(state, friend: Person) {
+      state.friends.push(friend);
+    },
+    ADD_MACHINES(state, machine: Machine) {
+      state.machines.push(machine);
+    },
+    ADD_LOCATIONS(state, location: Location) {
+      state.locations.push(location);
+    },
   },
   actions: {
     async FETCH_FRIENDS(context) {
@@ -88,6 +97,23 @@ const modules = defineModule({
       );
 
       return responseBody?.persons;
+    },
+    async ADD_FRIEND(context, payload: Person) {
+      const { rootState } = actionContext(context);
+
+      const options: RequestInit = {
+        body: JSON.stringify({
+          origin: rootState.authentication.user?.uuid,
+          target: payload.uuid,
+          approved: true,
+        }),
+      };
+
+      await postRequest<PersonCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/friends`,
+        options
+      );
+      await context.dispatch("FETCH_FRIENDS");
     },
   },
   namespaced: true,
