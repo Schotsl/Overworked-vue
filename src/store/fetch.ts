@@ -32,22 +32,40 @@ export class JSONParsingError extends FetchError {
   }
 }
 
+interface ControllerStorage {
+  [key: string]: AbortController;
+}
+
+const controllerStorage: ControllerStorage = {};
+
 export async function getRequest<ResponseBody>(
   url: string,
   additionalOptions: RequestInit = {}
 ) {
+  const startUrl = url.split("?")[0];
+  const abortController = controllerStorage[startUrl];
+
+  // If we've already created a control we'll abort the previous request
+  if (abortController) {
+    abortController.abort();
+  }
+
+  // Create a new controller for the next request
+  controllerStorage[startUrl] = new AbortController();
+
   const jwtToken = store.state.authentication.token;
   const authenticationHeaders = new Headers();
 
-  if (jwtToken)
+  if (jwtToken) {
     authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+  }
 
-  const requestOptions = Object.assign(
-    {},
-    baseGetOptions,
-    { headers: authenticationHeaders },
-    additionalOptions
-  );
+  const requestOptions = {
+    ...baseGetOptions,
+    ...additionalOptions,
+    headers: authenticationHeaders,
+    signal: abortController?.signal,
+  };
 
   const response = await fetch(url, requestOptions);
 
