@@ -100,7 +100,6 @@ export default defineComponent({
   },
   setup() {
     onIonViewWillEnter(async () => {
-      console.log("PageFriends:onIonViewWillEnter");
       if (store.state.userdata.friends.length === 0) {
         await store.dispatch.userdata.FETCH_FRIENDS();
       }

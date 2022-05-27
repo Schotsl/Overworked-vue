@@ -52,7 +52,6 @@ export default defineComponent({
   },
   methods: {
     logout() {
-      console.log("Logging out...");
       store.dispatch.authentication.LOGOUT();
       router.push("/");
     },

@@ -148,7 +148,6 @@ export default defineComponent({
       // Get authorized user from local storage
       await store.dispatch.authentication.RESTORE_AUTH();
       if (store.getters.authentication.isLoggedIn) {
-        console.log("PageLogin:onIonViewWillEnter:alreadyLoggedIn");
         router.push("/entries");
       }
     });
