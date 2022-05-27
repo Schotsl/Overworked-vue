@@ -2,6 +2,7 @@ export interface Person {
   name: string;
   uuid: string;
   photo: string | undefined;
+  friend: string | undefined;
 }
 
 export interface Machine {

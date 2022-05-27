@@ -1,5 +1,5 @@
 import { defineModule } from "direct-vuex";
-import { getRequest, postRequest } from "../fetch";
+import { getRequest, postRequest, deleteRequest } from "../fetch";
 import { moduleActionContext, moduleGetterContext } from "../index";
 
 import {
@@ -143,10 +143,9 @@ const modules = defineModule({
 
       commit.SET_FRIENDS(friends);
 
-      // await postRequest<PersonCollection>(
-      //   `https://api.overworked.sjorsvanholst.nl/v1/friends`,
-      //   options
-      // );
+      await deleteRequest(
+        `https://api.overworked.sjorsvanholst.nl/v1/friends/${payload.friend}`
+      );
     },
   },
   namespaced: true,

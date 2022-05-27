@@ -4,6 +4,10 @@ const baseGetOptions: RequestInit = {
   method: "GET",
 };
 
+const baseDeleteOptions: RequestInit = {
+  method: "DELETE",
+};
+
 const basePostOptions: RequestInit = {
   method: "POST",
   headers: {
@@ -114,4 +118,22 @@ export async function postRequest<ResponseBody>(
   })) as ResponseBody;
 
   return body;
+}
+
+export async function deleteRequest(url: string) {
+  const jwtToken = store.state.authentication.token;
+  const authenticationHeaders = new Headers();
+
+  if (jwtToken) {
+    authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+  }
+
+  authenticationHeaders.set("Content-Type", "application/json");
+
+  const requestOptions = {
+    ...baseDeleteOptions,
+    headers: authenticationHeaders,
+  };
+
+  await fetch(url, requestOptions);
 }
