@@ -1,5 +1,5 @@
 import { defineModule } from "direct-vuex";
-import { getRequest } from "../fetch";
+import { getRequest, postRequest } from "../fetch";
 import { moduleActionContext, moduleGetterContext } from "../index";
 
 import {
@@ -72,13 +72,22 @@ const modules = defineModule({
     SET_SESSION(state, session: Session | null) {
       state.session = session;
     },
+    ADD_FRIENDS(state, friend: Person) {
+      state.friends.push(friend);
+    },
+    ADD_MACHINES(state, machine: Machine) {
+      state.machines.push(machine);
+    },
+    ADD_LOCATIONS(state, location: Location) {
+      state.locations.push(location);
+    },
   },
   actions: {
     async FETCH_FRIENDS(context) {
-      const { commit, rootState } = actionContext(context);
+      const { commit } = actionContext(context);
 
       const responseBody = await getRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`
+        `https://api.overworked.sjorsvanholst.nl/v1/person/friends`
       );
 
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
@@ -107,6 +116,23 @@ const modules = defineModule({
       );
 
       return responseBody?.persons;
+    },
+    async ADD_FRIEND(context, payload: Person) {
+      const { rootState } = actionContext(context);
+
+      const options: RequestInit = {
+        body: JSON.stringify({
+          origin: rootState.authentication.user?.uuid,
+          target: payload.uuid,
+          approved: true,
+        }),
+      };
+
+      await postRequest<PersonCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/friends`,
+        options
+      );
+      await context.dispatch("FETCH_FRIENDS");
     },
   },
   namespaced: true,

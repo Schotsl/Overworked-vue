@@ -27,8 +27,7 @@
             <ion-label>
               <h2>{{ person.name }}</h2>
             </ion-label>
-            <ion-button>
-              <ion-skeleton-text animated> </ion-skeleton-text>
+            <ion-button @click="addFriend(person)">
               Add friend
             </ion-button>
           </ion-item>
@@ -71,30 +70,50 @@ export default defineComponent({
   name: "FriendSearchModel",
   data(): {
     username: string;
+    loading: boolean;
     persons: Array<Person>;
   } {
     return {
       username: "",
+      loading: true,
       persons: [],
     };
   },
   watch: {
     async username() {
+      this.loading = true;
+
       if (this.computedUsername.length > 0) {
-        this.persons = await store.dispatch.userdata.SEARCH_FRIENDS({
+        const results = await store.dispatch.userdata.SEARCH_FRIENDS({
           username: this.computedUsername,
         });
+
+        this.persons = results;
+        this.loading = false;
       } else {
         this.persons = [];
+        this.loading = false;
       }
     },
   },
   computed: {
     computedEmpty() {
-      return this.persons.length === 0 && this.computedUsername.length !== 0;
+      return (
+        !this.loading &&
+        this.persons.length === 0 &&
+        this.computedUsername.length !== 0
+      );
     },
     computedUsername() {
       return this.username.trim();
+    },
+  },
+  methods: {
+    addFriend(person: Person) {
+      store.dispatch.userdata.ADD_FRIEND(person);
+    },
+    closed() {
+      this.$emit("closed");
     },
   },
   components: {
@@ -110,11 +129,6 @@ export default defineComponent({
     IonLabel,
     IonInput,
     IonButton,
-  },
-  methods: {
-    closed() {
-      this.$emit("closed");
-    },
   },
   emits: ["closed"],
 });

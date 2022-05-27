@@ -91,13 +91,13 @@ export async function postRequest<ResponseBody>(
 
   if (jwtToken)
     authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+    authenticationHeaders.set("Content-Type", "application/json");
 
-  const requestOptions = Object.assign(
-    {},
-    basePostOptions,
-    { headers: authenticationHeaders },
-    additionalOptions
-  );
+  const requestOptions = {
+    ...basePostOptions,
+    ...additionalOptions,
+    headers: authenticationHeaders,
+  };
 
   const response = await fetch(url, requestOptions);
 
