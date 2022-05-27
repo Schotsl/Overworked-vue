@@ -15,10 +15,17 @@ export interface UserDataState {
   friends: Person[];
   machines: Machine[];
   locations: Location[];
+  session: Session | null;
 }
 
 export interface UserSearch {
   username: string;
+}
+
+export interface Session {
+  participants: Person[];
+  location: Location;
+  day: number;
 }
 
 const modules = defineModule({
@@ -27,6 +34,7 @@ const modules = defineModule({
       friends: [],
       machines: [],
       locations: [],
+      session: null,
     };
   },
   getters: {
@@ -42,6 +50,14 @@ const modules = defineModule({
       const { state } = getterContext(args);
       return state.locations;
     },
+    hasActiveSession(...args): boolean {
+      const { state } = getterContext(args);
+      return state.session !== null;
+    },
+    session(...args): Session | null {
+      const { state } = getterContext(args);
+      return state.session;
+    },
   },
   mutations: {
     SET_FRIENDS(state, friends: Person[]) {
@@ -52,6 +68,9 @@ const modules = defineModule({
     },
     SET_LOCATIONS(state, locations: Location[]) {
       state.locations = locations;
+    },
+    SET_SESSION(state, session: Session | null) {
+      state.session = session;
     },
   },
   actions: {
