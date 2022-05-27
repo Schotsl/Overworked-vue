@@ -20,28 +20,32 @@
         </ion-toolbar>
       </ion-header>
 
-      <ion-list v-if="friends.length > 0">
-        <ion-item v-for="friend in friends" :key="friend.uuid">
-          <ion-avatar slot="start">
-            <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
-          </ion-avatar>
-          <ion-label>
-            <h2>{{ friend.name }}</h2>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-      <ion-list v-else>
-        <div class="skeleton-friends">
-          <ion-item v-for="i in 5" :key="i">
+      <template v-if="friends.length > 0">
+        <ion-list>
+          <ion-item v-for="friend in friends" :key="friend.uuid">
             <ion-avatar slot="start">
-              <ion-skeleton-text></ion-skeleton-text>
+              <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
             </ion-avatar>
             <ion-label>
-              <ion-skeleton-text animated></ion-skeleton-text>
+              <h2>{{ friend.name }}</h2>
             </ion-label>
           </ion-item>
-        </div>
-      </ion-list>
+        </ion-list>
+      </template>
+      <template v-else>
+        <ion-list>
+          <div class="skeleton-friends">
+            <ion-item v-for="i in 5" :key="i">
+              <ion-avatar slot="start">
+                <ion-skeleton-text></ion-skeleton-text>
+              </ion-avatar>
+              <ion-label>
+                <ion-skeleton-text animated></ion-skeleton-text>
+              </ion-label>
+            </ion-item>
+          </div>
+        </ion-list>
+      </template>
     </ion-content>
   </ion-page>
 </template>
