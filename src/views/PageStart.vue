@@ -2,103 +2,177 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Start</ion-title>
+        <ion-title>Starting a session</ion-title>
+        <template v-if="currentPage === pages[pages.length - 1]">
+          <ion-button slot="end" fill="clear" @click="saveSession"
+            >Finish</ion-button
+          >
+        </template>
+        <template v-else>
+          <ion-button slot="end" fill="clear" @click="nextPage"
+            >Next</ion-button
+          >
+        </template>
       </ion-toolbar>
     </ion-header>
-    <ion-content :fullscreen="true">
-      <ion-text color="primary">
-        <h2>Who are you gyming with?</h2>
-      </ion-text>
-      <ion-list>
-        <ion-list-header>
-          <ion-label>Name</ion-label>
-        </ion-list-header>
-
-        <ion-item v-for="person in personList" :key="person.uuid">
-          <ion-label>{{ person.name }}</ion-label>
-          <ion-checkbox slot="end"></ion-checkbox>
-        </ion-item>
-      </ion-list>
-
-      <ion-list>
-        <ion-list-header>
-          <ion-label>Locations</ion-label>
-        </ion-list-header>
-
-        <ion-radio-group>
-          <ion-item v-for="location in locationList" :key="location.uuid">
-            <ion-label>{{ location.title }}</ion-label>
-            <ion-radio slot="end"></ion-radio>
-          </ion-item>
-        </ion-radio-group>
-      </ion-list>
-      <ion-list>
+    <template v-if="currentPage == 'Friend'">
+      <ion-content>
         <ion-item>
-          <ion-label>Day</ion-label>
-          <ion-select value="0" ok-text="Okay" cancel-text="Dismiss">
-            <ion-select-option value="0">Monday</ion-select-option>
-            <ion-select-option value="1">Tuesday</ion-select-option>
-            <ion-select-option value="2">Wednesday</ion-select-option>
-            <ion-select-option value="3">Thursday</ion-select-option>
-            <ion-select-option value="4">Friday</ion-select-option>
-            <ion-select-option value="5">Saturday</ion-select-option>
-            <ion-select-option value="6">Sunday</ion-select-option>
-          </ion-select>
+          <ion-text color="primary">
+            <h2>Who is participating in this session?</h2>
+          </ion-text>
         </ion-item>
-      </ion-list>
-    </ion-content>
+        <ion-list>
+          <ion-item
+            v-for="participant in participantsForm"
+            :key="participant.item.uuid"
+          >
+            <ion-avatar slot="start">
+              <img
+                :src="
+                  participant.item.photo ?? 'https://via.placeholder.com/50x50'
+                "
+              />
+            </ion-avatar>
+            <ion-label>{{ participant.item.name }}</ion-label>
+            <ion-checkbox
+              slot="end"
+              v-model="participant.checked"
+            ></ion-checkbox>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </template>
+    <template v-else-if="currentPage == 'Location'">
+      <ion-content>
+        <ion-item>
+          <ion-text color="primary">
+            <h2>Where is this session?</h2>
+          </ion-text>
+        </ion-item>
+        <ion-list>
+          <ion-radio-group v-model="locationForm">
+            <ion-item v-for="location in locationList" :key="location.uuid">
+              <ion-label>{{ location.title }}</ion-label>
+              <ion-radio slot="end" :value="location.uuid"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+      </ion-content>
+    </template>
+    <template v-else-if="currentPage == 'Day'">
+      <ion-content>
+        <ion-item>
+          <ion-text color="primary">
+            <h2>Which schedule would you like?</h2>
+          </ion-text>
+        </ion-item>
+        <ion-list>
+          <ion-radio-group v-model="day">
+            <ion-item>
+              <ion-label>Monday</ion-label>
+              <ion-radio slot="end" :value="1"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Tuesday</ion-label>
+              <ion-radio slot="end" :value="2"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Wednesday</ion-label>
+              <ion-radio slot="end" :value="3"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Thursday</ion-label>
+              <ion-radio slot="end" :value="4"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Friday</ion-label>
+              <ion-radio slot="end" :value="5"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Saturday</ion-label>
+              <ion-radio slot="end" :value="6"></ion-radio>
+            </ion-item>
+            <ion-item>
+              <ion-label>Sunday</ion-label>
+              <ion-radio slot="end" :value="0"></ion-radio>
+            </ion-item>
+          </ion-radio-group>
+        </ion-list>
+      </ion-content>
+    </template>
   </ion-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import {
-  IonText,
   IonPage,
   IonTitle,
   IonHeader,
   IonToolbar,
   IonContent,
-  onIonViewWillEnter,
   IonList,
-  IonListHeader,
   IonItem,
   IonLabel,
   IonCheckbox,
   IonRadio,
   IonRadioGroup,
-  IonSelect,
-  IonSelectOption,
+  IonAvatar,
+  IonText,
 } from "@ionic/vue";
 import store from "@/store";
+import { Person } from "@/store/types";
+
+type CheckboxItem<T> = {
+  item: T;
+  checked: boolean;
+};
 
 export default defineComponent({
   name: "PageLogin",
-  data() {
-    onIonViewWillEnter(() => {
-      store.dispatch.userdata.FETCH_FRIENDS();
-      store.dispatch.userdata.FETCH_LOCATIONS();
-    });
+  data(): {
+    loading: boolean;
+    pages: string[];
+    currentPage: string;
+    day: number;
+    participantsForm: CheckboxItem<Person>[];
+    locationForm: string;
+  } {
     return {
       loading: false,
+      pages: ["Friend", "Location", "Day"],
+      currentPage: "Friend",
+      day: new Date().getDay(),
+      participantsForm: [],
+      locationForm: "",
     };
   },
+  async mounted() {
+    await store.dispatch.userdata.FETCH_FRIENDS();
+    await store.dispatch.userdata.FETCH_LOCATIONS();
+
+    const part = store.state.userdata.friends.map((person) => ({
+      item: person,
+      checked: false,
+    }));
+
+    this.participantsForm = part;
+  },
   components: {
-    IonText,
     IonPage,
     IonTitle,
     IonHeader,
     IonToolbar,
     IonContent,
     IonList,
-    IonListHeader,
     IonItem,
     IonLabel,
     IonCheckbox,
     IonRadio,
     IonRadioGroup,
-    IonSelect,
-    IonSelectOption,
+    IonAvatar,
+    IonText,
   },
   computed: {
     personList() {
@@ -109,6 +183,32 @@ export default defineComponent({
     },
     locationList() {
       return store.getters.userdata.locations;
+    },
+  },
+  methods: {
+    nextPage() {
+      const currentPageIndex = this.pages.indexOf(this.currentPage);
+      if (currentPageIndex < this.pages.length - 1) {
+        this.currentPage = this.pages[currentPageIndex + 1];
+      }
+    },
+    saveSession() {
+      this.loading = true;
+
+      const participants = this.participantsForm
+        .filter((p) => p.checked)
+        .map((p) => p.item);
+      const location = this.locationList.find(
+        (l) => l.uuid === this.locationForm
+      );
+
+      if (!location) return;
+
+      store.commit.userdata.SET_SESSION({
+        day: this.day,
+        location,
+        participants,
+      });
     },
   },
 });
