@@ -65,10 +65,10 @@ const modules = defineModule({
   },
   actions: {
     async FETCH_FRIENDS(context) {
-      const { commit, rootState } = actionContext(context);
+      const { commit } = actionContext(context);
 
       const responseBody = await getRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`
+        `https://api.overworked.sjorsvanholst.nl/v1/person/friends`
       );
 
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
