@@ -72,6 +72,9 @@ const modules = defineModule({
     SET_SESSION(state, session: Session | null) {
       state.session = session;
     },
+    SET_SESSION_DAY(state, day: number) {
+      if (state.session) state.session.day = day;
+    },
     ADD_FRIENDS(state, friend: Person) {
       state.friends.push(friend);
     },
