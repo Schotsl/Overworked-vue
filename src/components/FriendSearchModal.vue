@@ -8,7 +8,7 @@
         </ion-button>
       </ion-toolbar>
     </ion-header>
-    <ion-content fullscreen>
+    <ion-content fullscreen flex>
       <ion-list>
         <ion-item>
           <ion-label position="stacked">Friend's Email</ion-label>
@@ -16,7 +16,10 @@
         </ion-item>
       </ion-list>
       <ion-list>
-        <template v-if="persons.length">
+        <template v-if="computedEmpty">
+          <ion-text class="ion-text-center">😔 No results found</ion-text>
+        </template>
+        <template v-else-if="persons.length">
           <ion-item v-for="person in persons" :key="person.uuid">
             <ion-avatar slot="start">
               <img :src="person.photo ?? 'https://via.placeholder.com/50x50'" />
@@ -52,11 +55,13 @@ import { defineComponent } from "vue";
 import {
   IonModal,
   IonContent,
+  IonAvatar,
   IonList,
   IonItem,
   IonHeader,
   IonToolbar,
   IonTitle,
+  IonSkeletonText,
   IonLabel,
   IonInput,
   IonButton,
@@ -74,12 +79,22 @@ export default defineComponent({
     };
   },
   watch: {
-    async username(username) {
-      if (username.length > 0) {
+    async username() {
+      if (this.computedUsername.length > 0) {
         this.persons = await store.dispatch.userdata.SEARCH_FRIENDS({
-          username,
+          username: this.computedUsername,
         });
+      } else {
+        this.persons = [];
       }
+    },
+  },
+  computed: {
+    computedEmpty() {
+      return this.persons.length === 0 && this.computedUsername.length !== 0;
+    },
+    computedUsername() {
+      return this.username.trim();
     },
   },
   components: {
@@ -87,6 +102,8 @@ export default defineComponent({
     IonContent,
     IonList,
     IonItem,
+    IonAvatar,
+    IonSkeletonText,
     IonHeader,
     IonToolbar,
     IonTitle,
@@ -102,3 +119,17 @@ export default defineComponent({
   emits: ["closed"],
 });
 </script>
+
+<style scoped>
+ion-text {
+  position: absolute;
+  top: 43%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+
+ion-list:nth-of-type(2) {
+  height: 75%;
+  position: relative;
+}
+</style>

@@ -62,7 +62,7 @@ const modules = defineModule({
         `https://api.overworked.sjorsvanholst.nl/v1/person?persons=${rootState.authentication.user?.uuid}`
       );
 
-      commit.SET_FRIENDS(responseBody.persons);
+      if (responseBody) commit.SET_FRIENDS(responseBody.persons);
     },
     async FETCH_MACHINES(context) {
       const { commit, rootState } = actionContext(context);
@@ -71,7 +71,7 @@ const modules = defineModule({
         `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${rootState.authentication.user?.uuid}`
       );
 
-      commit.SET_MACHINES(responseBody.machines);
+      if (responseBody) commit.SET_MACHINES(responseBody.machines);
     },
     async FETCH_LOCATIONS(context) {
       const { commit, rootState } = actionContext(context);
@@ -80,14 +80,14 @@ const modules = defineModule({
         `https://api.overworked.sjorsvanholst.nl/v1/location?persons=${rootState.authentication.user?.uuid}&limit=99`
       );
 
-      commit.SET_LOCATIONS(responseBody.locations);
+      if (responseBody) commit.SET_LOCATIONS(responseBody.locations);
     },
     async SEARCH_FRIENDS(_context, payload: UserSearch) {
       const responseBody = await getRequest<PersonCollection>(
         `https://api.overworked.sjorsvanholst.nl/v1/person/search?username=${payload.username}`
       );
 
-      return responseBody.persons;
+      return responseBody?.persons;
     },
   },
   namespaced: true,
