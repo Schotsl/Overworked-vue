@@ -209,6 +209,10 @@ export default defineComponent({
         location,
         participants,
       });
+
+      this.loading = false;
+
+      this.$router.push("/schedule");
     },
   },
 });
