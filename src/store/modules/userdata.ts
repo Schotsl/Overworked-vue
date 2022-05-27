@@ -90,7 +90,7 @@ const modules = defineModule({
       const { commit } = actionContext(context);
 
       const responseBody = await getRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/person/friends`
+        `https://api.overworked.sjorsvanholst.nl/v1/person/friend`
       );
 
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
@@ -132,7 +132,7 @@ const modules = defineModule({
       };
 
       await postRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/friends`,
+        `https://api.overworked.sjorsvanholst.nl/v1/friend`,
         options
       );
       await context.dispatch("FETCH_FRIENDS");
@@ -147,7 +147,7 @@ const modules = defineModule({
       commit.SET_FRIENDS(friends);
 
       await deleteRequest(
-        `https://api.overworked.sjorsvanholst.nl/v1/friends/${payload.friend}`
+        `https://api.overworked.sjorsvanholst.nl/v1/friend/${payload.friend}`
       );
     },
   },
