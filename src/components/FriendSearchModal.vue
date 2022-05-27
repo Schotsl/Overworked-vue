@@ -67,10 +67,7 @@ import {
 export default defineComponent({
   name: "FriendSearchModel",
 
-  emits: [
-    "added",
-    "closed"
-  ],
+  emits: ["added", "closed"],
 
   data(): {
     username: string;

@@ -134,6 +134,20 @@ const modules = defineModule({
       );
       await context.dispatch("FETCH_FRIENDS");
     },
+    async DELETE_FRIEND(context, payload: Person) {
+      const { commit } = actionContext(context);
+
+      const friends = context.getters.friends.filter((person: Person) => {
+        return person.uuid !== payload.uuid;
+      });
+
+      commit.SET_FRIENDS(friends);
+
+      // await postRequest<PersonCollection>(
+      //   `https://api.overworked.sjorsvanholst.nl/v1/friends`,
+      //   options
+      // );
+    },
   },
   namespaced: true,
 });

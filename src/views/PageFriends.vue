@@ -7,7 +7,11 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <friend-search-modal v-if="modal" @closed="closeModal" @added="addFriend" />
+      <friend-search-modal
+        v-if="modal"
+        @added="addFriend"
+        @closed="closeModal"
+      />
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button @click="openModal">
           <ion-icon :icon="add" />
@@ -45,6 +49,7 @@
             <ion-label>
               <h2>{{ friend.name }}</h2>
             </ion-label>
+            <ion-icon @click="deleteFriend(friend)" :icon="trashOutline" />
           </ion-item>
         </template>
       </ion-list>
@@ -53,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { add } from "ionicons/icons";
+import { add, trashOutline } from "ionicons/icons";
 import { Person } from "../store/types";
 import { defineComponent } from "vue";
 import {
@@ -101,9 +106,12 @@ export default defineComponent({
 
       await store.dispatch.userdata.ADD_FRIEND(person);
       await store.dispatch.userdata.FETCH_FRIENDS();
-      
+
       this.loading = false;
-    }
+    },
+    async deleteFriend(person: Person) {
+      await store.dispatch.userdata.DELETE_FRIEND(person);
+    },
   },
 
   computed: {
@@ -118,13 +126,14 @@ export default defineComponent({
   setup() {
     return {
       add,
+      trashOutline,
     };
   },
 
   // TODO: Shouldn't be needed since we'll load everything at the start of the app
   async mounted() {
     await store.dispatch.userdata.FETCH_FRIENDS();
-    this.loading = false
+    this.loading = false;
   },
 
   components: {
@@ -158,6 +167,15 @@ ion-text {
 ion-list {
   height: 100%;
   position: relative;
+}
+
+ion-icon {
+  margin: 0 0.3rem 0;
+  cursor: pointer;
+}
+
+ion-icon:hover {
+  color: #fff;
 }
 
 span {
