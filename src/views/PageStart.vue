@@ -148,17 +148,6 @@ export default defineComponent({
       locationForm: "",
     };
   },
-  async mounted() {
-    await store.dispatch.userdata.FETCH_FRIENDS();
-    await store.dispatch.userdata.FETCH_LOCATIONS();
-
-    const part = store.state.userdata.friends.map((person) => ({
-      item: person,
-      checked: false,
-    }));
-
-    this.participantsForm = part;
-  },
   components: {
     IonPage,
     IonTitle,
@@ -209,7 +198,25 @@ export default defineComponent({
         location,
         participants,
       });
+
+      this.loading = false;
+
+      this.$router.push("/schedule");
     },
+  },
+  watch: {
+    personList(newList: Person[]) {
+      const part = newList.map((person) => ({
+        item: person,
+        checked: false,
+      }));
+
+      this.participantsForm = part;
+    },
+  },
+  async mounted() {
+    await store.dispatch.userdata.FETCH_FRIENDS();
+    await store.dispatch.userdata.FETCH_LOCATIONS();
   },
 });
 </script>
