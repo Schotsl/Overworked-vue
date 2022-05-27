@@ -115,8 +115,9 @@ export default defineComponent({
   methods: {
     addFriend(person: Person) {
       store.dispatch.userdata.ADD_FRIEND(person);
+      this.closeModal();
     },
-    closed() {
+    closeModal() {
       this.$emit("closed");
     },
   },
