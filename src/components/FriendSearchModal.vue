@@ -27,9 +27,7 @@
             <ion-label>
               <h2>{{ person.name }}</h2>
             </ion-label>
-            <ion-button @click="addFriend(person)">
-              Add friend
-            </ion-button>
+            <ion-button @click="addFriend(person)"> Add friend </ion-button>
           </ion-item>
         </template>
         <template v-else>

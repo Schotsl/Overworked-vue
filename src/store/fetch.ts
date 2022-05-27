@@ -91,7 +91,7 @@ export async function postRequest<ResponseBody>(
 
   if (jwtToken)
     authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
-    authenticationHeaders.set("Content-Type", "application/json");
+  authenticationHeaders.set("Content-Type", "application/json");
 
   const requestOptions = {
     ...basePostOptions,
