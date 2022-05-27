@@ -1,6 +1,6 @@
 <template>
   <ion-app>
-    <ion-tabs v-if="!loading">
+    <ion-tabs>
       <ion-router-outlet />
       <navigation-bar v-if="loggedIn" />
     </ion-tabs>
@@ -8,12 +8,11 @@
 </template>
 
 <script lang="ts">
-import store, { ionicStore } from "./store";
+import store from "./store";
 import { defineComponent } from "vue";
 import { IonApp, IonTabs, IonRouterOutlet } from "@ionic/vue";
 
 import NavigationBar from "./components/NavigationBar.vue";
-import router from "./router";
 
 export default defineComponent({
   name: "App",
@@ -28,26 +27,12 @@ export default defineComponent({
       return store.getters.authentication.isLoggedIn;
     },
   },
-  data: () => ({
-    loading: true,
-  }),
   async created() {
     try {
       await window.screen.orientation.lock("portrait");
     } catch (error) {
       console.error("Could not lock screen orientation, are we in a browser?");
     }
-    // Initialize local storage
-    await ionicStore.init();
-
-    // Get authorized user from local storage
-    await store.dispatch.authentication.RESTORE_AUTH();
-
-    // Send user to login if the storage was empty
-    if (!store.getters.authentication.isLoggedIn) {
-      router.push("/");
-    }
-    this.loading = false;
   },
 });
 </script>
