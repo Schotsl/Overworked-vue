@@ -3,6 +3,11 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Starting a session</ion-title>
+        <template v-if="currentPage !== pages[0]">
+          <ion-button slot="end" fill="clear" @click="prevPage"
+            >Previous</ion-button
+          >
+        </template>
         <template v-if="currentPage === pages[pages.length - 1]">
           <ion-button slot="end" fill="clear" @click="saveSession"
             >Finish</ion-button
@@ -181,6 +186,14 @@ export default defineComponent({
       if (currentPageIndex < this.pages.length - 1) {
         store.commit.app.SET_STARTPAGE_CURRENTPAGE(
           this.pages[currentPageIndex + 1]
+        );
+      }
+    },
+    prevPage() {
+      const currentPageIndex = this.pages.indexOf(this.currentPage);
+      if (currentPageIndex > 0) {
+        store.commit.app.SET_STARTPAGE_CURRENTPAGE(
+          this.pages[currentPageIndex - 1]
         );
       }
     },
