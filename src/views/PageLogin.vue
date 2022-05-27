@@ -58,7 +58,7 @@ import {
   onIonViewWillEnter,
 } from "@ionic/vue";
 
-import store, { ionicStore } from "@/store";
+import store from "@/store";
 
 export default defineComponent({
   name: "PageLogin",
@@ -99,11 +99,6 @@ export default defineComponent({
 
   setup() {
     onIonViewWillEnter(async () => {
-      // Initialize local storage
-      await ionicStore.init();
-
-      // Get authorized user from local storage
-      await store.dispatch.authentication.RESTORE_AUTH();
       if (store.getters.authentication.isLoggedIn) {
         router.push("/entries");
       }

@@ -51,8 +51,8 @@ export default defineComponent({
     IonButton,
   },
   methods: {
-    logout() {
-      store.dispatch.authentication.LOGOUT();
+    async logout() {
+      await store.dispatch.authentication.LOGOUT();
       router.push("/");
     },
   },

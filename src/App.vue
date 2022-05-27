@@ -14,8 +14,6 @@ import { IonApp, IonTabs, IonRouterOutlet } from "@ionic/vue";
 
 import NavigationBar from "./components/NavigationBar.vue";
 
-import { SplashScreen } from "@capacitor/splash-screen";
-
 import { initializeApp, FirebaseOptions } from "firebase/app";
 
 // TODO: This should be moved to a .env file
@@ -38,6 +36,11 @@ export default defineComponent({
     IonTabs,
     IonRouterOutlet,
   },
+  data() {
+    return {
+      loading: true,
+    };
+  },
   computed: {
     loggedIn() {
       return store.getters.authentication.isLoggedIn;
@@ -49,9 +52,6 @@ export default defineComponent({
     } catch (error) {
       console.error("Could not lock screen orientation, are we in a browser?");
     }
-  },
-  mounted() {
-    SplashScreen.hide();
   },
 });
 </script>

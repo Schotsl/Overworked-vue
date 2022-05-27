@@ -44,20 +44,29 @@ const modules = defineModule({
      * @returns {Promise<boolean>} Return true when the user was restored, false otherwise.
      */
     async RESTORE_AUTH(context): Promise<boolean> {
-      const { commit } = actionContext(context);
+      const { dispatch, getters } = actionContext(context);
 
-      const user = await ionicStore.get("user");
-      const token = await ionicStore.get("token");
+      // Dont restore the user if the user is already logged in
+      if (getters.isLoggedIn) return false;
+
       const authenticationService = await ionicStore.get(
         "authenticationService"
       );
 
-      if (!user || !token || !authenticationService) return false;
+      if (!authenticationService) return false;
 
-      commit.SET_TOKEN(token);
-      commit.SET_USER(user);
-      commit.SET_AUTHENTICATION_SERVICE(authenticationService);
-      return true;
+      if (authenticationService === "google") {
+        await dispatch.LOGIN_GOOGLE();
+        return true;
+      }
+
+      if (authenticationService === "apple") {
+        // dispatch.LOGIN_APPLE();
+        console.log("Not implemented yet");
+        return true;
+      }
+
+      return false;
     },
     async SAVE_AUTH(
       context,
