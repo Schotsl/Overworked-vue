@@ -14,27 +14,6 @@
       </ion-header>
 
       <ion-list>
-        <ion-list-header>
-          <ion-label>Name</ion-label>
-        </ion-list-header>
-
-        <ion-item>
-          <ion-label>Sjors van Holst</ion-label>
-          <ion-checkbox slot="end"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Martin Goes</ion-label>
-          <ion-checkbox slot="end"></ion-checkbox>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Lanxiang Vermeulen</ion-label>
-          <ion-checkbox slot="end"></ion-checkbox>
-        </ion-item>
-      </ion-list>
-
-      <ion-list>
         <ion-radio-group value="biff">
           <ion-list-header>
             <ion-label>Location</ion-label>
@@ -85,10 +64,10 @@ import {
   IonHeader,
   IonSelect,
   IonToolbar,
-  IonCheckbox,
   IonRadioGroup,
   IonListHeader,
   IonSelectOption,
+  IonContent,
 } from "@ionic/vue";
 
 export default defineComponent({
@@ -103,10 +82,10 @@ export default defineComponent({
     IonHeader,
     IonSelect,
     IonToolbar,
-    IonCheckbox,
     IonRadioGroup,
     IonListHeader,
     IonSelectOption,
+    IonContent,
   },
 });
 </script>

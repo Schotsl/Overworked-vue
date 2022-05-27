@@ -5,15 +5,33 @@
         <ion-title>Start</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
-      <div class="container">
-        <ion-text class="title">🏋️</ion-text>
+    <ion-content :fullscreen="true">
+      <ion-text color="primary">
+        <h2>Who are you gyming with?</h2>
+      </ion-text>
+      <ion-list>
+        <ion-list-header>
+          <ion-label>Name</ion-label>
+        </ion-list-header>
 
-        <ion-text color="primary">
-          <h2>Who are you gyming with?</h2>
-        </ion-text>
-        <ion-list> </ion-list>
-      </div>
+        <ion-item v-for="person in personList" :key="person.uuid">
+          <ion-label>{{ person.name }}</ion-label>
+          <ion-checkbox slot="end"></ion-checkbox>
+        </ion-item>
+      </ion-list>
+
+      <ion-list>
+        <ion-list-header>
+          <ion-label>Locations</ion-label>
+        </ion-list-header>
+
+        <ion-radio-group>
+          <ion-item v-for="location in locationList" :key="location.uuid">
+            <ion-label>{{ location.title }}</ion-label>
+            <ion-radio slot="end"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -27,17 +45,28 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
+  onIonViewWillEnter,
+  IonList,
+  IonListHeader,
+  IonItem,
+  IonLabel,
+  IonCheckbox,
+  IonRadio,
+  IonRadioGroup,
 } from "@ionic/vue";
+import store from "@/store";
 
 export default defineComponent({
   name: "PageLogin",
-
   data() {
+    onIonViewWillEnter(() => {
+      store.dispatch.userdata.FETCH_FRIENDS();
+      store.dispatch.userdata.FETCH_LOCATIONS();
+    });
     return {
       loading: false,
     };
   },
-
   components: {
     IonText,
     IonPage,
@@ -45,34 +74,24 @@ export default defineComponent({
     IonHeader,
     IonToolbar,
     IonContent,
+    IonList,
+    IonListHeader,
+    IonItem,
+    IonLabel,
+    IonCheckbox,
+    IonRadio,
+    IonRadioGroup,
   },
-  methods: {},
+  computed: {
+    personList() {
+      return store.getters.userdata.friends;
+    },
+    machineList() {
+      return store.getters.userdata.machines;
+    },
+    locationList() {
+      return store.getters.userdata.locations;
+    },
+  },
 });
 </script>
-
-<style>
-.title {
-  margin: 1.5rem 1.5rem 2rem;
-  font-size: 5rem;
-}
-
-.login {
-  width: 100%;
-  margin: 0.75rem;
-  font-size: 1.15rem;
-}
-
-.spinner {
-  width: 3em;
-  margin: 6rem;
-  height: 3em;
-}
-
-.container {
-  margin: 2rem 2.5rem 2.5rem;
-  display: flex;
-
-  align-items: center;
-  flex-direction: column;
-}
-</style>
