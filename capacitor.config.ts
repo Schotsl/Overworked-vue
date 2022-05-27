@@ -10,6 +10,9 @@ const config: CapacitorConfig = {
       skipNativeAuth: false,
       providers: ["apple.com", "github.com", "google.com"],
     },
+    SplashScreen: {
+      launchAutoHide: false,
+    },
   },
 };
 

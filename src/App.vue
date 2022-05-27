@@ -14,6 +14,8 @@ import { IonApp, IonTabs, IonRouterOutlet } from "@ionic/vue";
 
 import NavigationBar from "./components/NavigationBar.vue";
 
+import { SplashScreen } from "@capacitor/splash-screen";
+
 export default defineComponent({
   name: "App",
   components: {
@@ -33,6 +35,9 @@ export default defineComponent({
     } catch (error) {
       console.error("Could not lock screen orientation, are we in a browser?");
     }
+  },
+  mounted() {
+    SplashScreen.hide();
   },
 });
 </script>

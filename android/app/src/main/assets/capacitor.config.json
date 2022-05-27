@@ -11,6 +11,9 @@
 				"github.com",
 				"google.com"
 			]
+		},
+		"SplashScreen": {
+			"launchAutoHide": false
 		}
 	}
 }
