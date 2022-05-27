@@ -64,7 +64,7 @@ export async function getRequest<ResponseBody>(
     ...baseGetOptions,
     ...additionalOptions,
     headers: authenticationHeaders,
-    signal: abortController?.signal,
+    signal: controllerStorage[startUrl]?.signal,
   };
 
   const response = await fetch(url, requestOptions);
