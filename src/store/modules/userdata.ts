@@ -112,7 +112,7 @@ const modules = defineModule({
     },
     async SEARCH_FRIENDS(_context, payload: UserSearch) {
       const responseBody = await getRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/person/search?username=${payload.username}`
+        `https://api.overworked.sjorsvanholst.nl/v1/person/search?query=${payload.username}`
       );
 
       return responseBody?.persons;
