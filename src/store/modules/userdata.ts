@@ -9,6 +9,10 @@ export interface UserDataState {
   machines: Machine[];
 }
 
+export interface UserSearch {
+  username: string;
+}
+
 const modules = defineModule({
   state: (): UserDataState => {
     return {
@@ -52,6 +56,13 @@ const modules = defineModule({
       );
 
       commit.SET_MACHINES(responseBody.machines);
+    },
+    async SEARCH_FRIENDS(_context, payload: UserSearch) {
+      const responseBody = await getRequest<PersonCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/person/search?username=${payload.username}`
+      );
+
+      return responseBody.persons;
     },
   },
   namespaced: true,
