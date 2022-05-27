@@ -67,7 +67,10 @@ import {
 export default defineComponent({
   name: "FriendSearchModel",
 
-  emits: ["closed"],
+  emits: [
+    "added",
+    "closed"
+  ],
 
   data(): {
     username: string;
@@ -114,10 +117,7 @@ export default defineComponent({
 
   methods: {
     addFriend(person: Person) {
-      store.dispatch.userdata.ADD_FRIEND(person);
-      this.closeModal();
-    },
-    closeModal() {
+      this.$emit("added", person);
       this.$emit("closed");
     },
   },

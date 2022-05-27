@@ -7,7 +7,7 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <friend-search-modal v-if="modal" @closed="closeModal" />
+      <friend-search-modal v-if="modal" @closed="closeModal" @added="addFriend" />
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button @click="openModal">
           <ion-icon :icon="add" />
@@ -27,23 +27,23 @@
             <span @click="openModal">here</span>!</ion-text
           >
         </template>
-        <template v-else-if="computedFriends.length">
-          <ion-item v-for="friend in computedFriends" :key="friend.uuid">
-            <ion-avatar slot="start">
-              <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
-            </ion-avatar>
-            <ion-label>
-              <h2>{{ friend.name }}</h2>
-            </ion-label>
-          </ion-item>
-        </template>
-        <template v-else>
+        <template v-else-if="loading">
           <ion-item v-for="i in 5" :key="i">
             <ion-avatar slot="start">
               <ion-skeleton-text></ion-skeleton-text>
             </ion-avatar>
             <ion-label>
               <ion-skeleton-text animated></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+        </template>
+        <template v-else>
+          <ion-item v-for="friend in computedFriends" :key="friend.uuid">
+            <ion-avatar slot="start">
+              <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
+            </ion-avatar>
+            <ion-label>
+              <h2>{{ friend.name }}</h2>
             </ion-label>
           </ion-item>
         </template>
@@ -85,7 +85,7 @@ export default defineComponent({
   } {
     return {
       modal: false,
-      loading: true,
+      loading: false,
     };
   },
 
@@ -96,6 +96,14 @@ export default defineComponent({
     closeModal() {
       this.modal = false;
     },
+    async addFriend(person: Person) {
+      this.loading = true;
+
+      await store.dispatch.userdata.ADD_FRIEND(person);
+      await store.dispatch.userdata.FETCH_FRIENDS();
+      
+      this.loading = false;
+    }
   },
 
   computed: {
@@ -115,9 +123,8 @@ export default defineComponent({
 
   // TODO: Shouldn't be needed since we'll load everything at the start of the app
   async mounted() {
-    this.loading = true;
     await store.dispatch.userdata.FETCH_FRIENDS();
-    this.loading = false;
+    this.loading = false
   },
 
   components: {
