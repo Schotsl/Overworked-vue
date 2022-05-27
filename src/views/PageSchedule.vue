@@ -3,6 +3,17 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Schedule</ion-title>
+        <ion-item slot="end">
+          <ion-select v-model="dayForm" ok-text="Okay" cancel-text="Dismiss">
+            <ion-select-option :value="1">Monday</ion-select-option>
+            <ion-select-option :value="2">Tuesday</ion-select-option>
+            <ion-select-option :value="3">Wednesday</ion-select-option>
+            <ion-select-option :value="4">Thursday</ion-select-option>
+            <ion-select-option :value="5">Friday</ion-select-option>
+            <ion-select-option :value="6">Saturday</ion-select-option>
+            <ion-select-option :value="0">Sunday</ion-select-option>
+          </ion-select>
+        </ion-item>
       </ion-toolbar>
     </ion-header>
 
@@ -24,7 +35,10 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
+  IonSelect,
+  IonItem,
 } from "@ionic/vue";
+import store from "@/store";
 
 export default defineComponent({
   name: "PageSchedule",
@@ -34,6 +48,32 @@ export default defineComponent({
     IonHeader,
     IonToolbar,
     IonContent,
+    IonSelect,
+    IonItem,
+  },
+  data() {
+    return {
+      dayForm: store.state.userdata.session?.day || 0,
+    };
+  },
+  watch: {
+    dayForm(formInput: number) {
+      store.commit.userdata.SET_SESSION_DAY(formInput);
+    },
+    day(storeChange: number) {
+      this.dayForm = storeChange;
+    },
+  },
+  computed: {
+    day() {
+      return store.state.userdata.session?.day || 0;
+    },
+  },
+  methods: {
+    setDay(event: any) {
+      console.log(this.day);
+      console.log(event);
+    },
   },
 });
 </script>

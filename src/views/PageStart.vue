@@ -134,7 +134,6 @@ export default defineComponent({
   data(): {
     loading: boolean;
     pages: string[];
-    currentPage: string;
     day: number;
     participantsForm: CheckboxItem<Person>[];
     locationForm: string;
@@ -142,7 +141,6 @@ export default defineComponent({
     return {
       loading: false,
       pages: ["Friend", "Location", "Day"],
-      currentPage: "Friend",
       day: new Date().getDay(),
       participantsForm: [],
       locationForm: "",
@@ -173,12 +171,17 @@ export default defineComponent({
     locationList() {
       return store.getters.userdata.locations;
     },
+    currentPage() {
+      return store.state.app.startPage.currentPage;
+    },
   },
   methods: {
     nextPage() {
       const currentPageIndex = this.pages.indexOf(this.currentPage);
       if (currentPageIndex < this.pages.length - 1) {
-        this.currentPage = this.pages[currentPageIndex + 1];
+        store.commit.app.SET_STARTPAGE_CURRENTPAGE(
+          this.pages[currentPageIndex + 1]
+        );
       }
     },
     saveSession() {

@@ -2,6 +2,7 @@ import { createDirectStore } from "direct-vuex";
 
 import userdata from "./modules/userdata";
 import authentication from "./modules/authentication";
+import app from "./modules/app";
 import { IonicStorage } from "./IonicStorage";
 
 export const ionicStore = new IonicStorage();
@@ -16,6 +17,7 @@ const {
   modules: {
     userdata,
     authentication,
+    app,
   },
 });
 
