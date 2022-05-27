@@ -71,31 +71,37 @@ export default defineComponent({
   name: "FriendSearchModel",
   data(): {
     username: string;
+    loading: boolean;
     persons: Array<Person>;
   } {
     return {
       username: "",
+      loading: true,
       persons: [],
     };
   },
   watch: {
     async username() {
+      this.loading = true; 
+      
       if (this.computedUsername.length > 0) {
-        this.persons = await store.dispatch.userdata.SEARCH_FRIENDS({
-          username: this.computedUsername,
-        });
+        const results = await store.dispatch.userdata.SEARCH_FRIENDS({ username: this.computedUsername });
+
+        this.persons = results;
+        this.loading = false;
       } else {
         this.persons = [];
+        this.loading = false;
       }
     },
   },
   computed: {
     computedEmpty() {
-      return this.persons.length === 0 && this.computedUsername.length !== 0;
+      return !this.loading && this.persons.length === 0 && this.computedUsername.length !== 0;
     },
     computedUsername() {
       return this.username.trim();
-    },
+    }
   },
   components: {
     IonModal,
