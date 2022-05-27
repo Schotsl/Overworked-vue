@@ -16,6 +16,20 @@ import NavigationBar from "./components/NavigationBar.vue";
 
 import { SplashScreen } from "@capacitor/splash-screen";
 
+import { initializeApp, FirebaseOptions } from "firebase/app";
+
+// TODO: This should be moved to a .env file
+const firebaseConfig: FirebaseOptions = {
+  appId: "1:863141653950:web:86813dbabb9bbec54dddef",
+  apiKey: "AIzaSyB7R5pFg9qeoDVGha2mBpCMzziQ7x0rfyA",
+  projectId: "test-49d01",
+  authDomain: "test-49d01.firebaseapp.com",
+  storageBucket: "test-49d01.appspot.com",
+  messagingSenderId: "863141653950",
+};
+
+initializeApp(firebaseConfig);
+
 export default defineComponent({
   name: "App",
   components: {

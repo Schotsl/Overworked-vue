@@ -43,22 +43,8 @@
 <script lang="ts">
 import router from "../router";
 
-// TODO: This should be moved to a .env file
-const firebaseConfig: FirebaseOptions = {
-  appId: "1:863141653950:web:86813dbabb9bbec54dddef",
-  apiKey: "AIzaSyB7R5pFg9qeoDVGha2mBpCMzziQ7x0rfyA",
-  projectId: "test-49d01",
-  authDomain: "test-49d01.firebaseapp.com",
-  storageBucket: "test-49d01.appspot.com",
-  messagingSenderId: "863141653950",
-};
-
-initializeApp(firebaseConfig);
-
 import { defineComponent } from "vue";
-import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 import { logoGoogle, logoApple } from "ionicons/icons";
-import { initializeApp, FirebaseOptions } from "firebase/app";
 import {
   IonText,
   IonIcon,
@@ -105,38 +91,9 @@ export default defineComponent({
 
     async googleSignin() {
       this.loginLoading = true;
-
-      const { credential, user } =
-        await FirebaseAuthentication.signInWithGoogle();
-
-      if (!credential?.idToken) {
-        throw new Error("Google sign in failed");
-      }
-
-      const body = JSON.stringify({
-        name: user?.displayName,
-        email: user?.email,
-        photo: user?.photoUrl,
-      });
-
-      const method = "POST";
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${credential?.idToken}`,
-      };
-
-      const response = await fetch(
-        `https://api.overworked.sjorsvanholst.nl/v1/person`,
-        { method, headers, body }
-      );
-      const parsed = await response.json();
-
-      await store.dispatch.authentication.SAVE_AUTH({
-        user: parsed,
-        token: credential!.idToken!,
-      });
-
-      router.push("/entries");
+      await store.dispatch.authentication.LOGIN_GOOGLE();
+      await router.push("/entries");
+      this.loginLoading = false;
     },
   },
 

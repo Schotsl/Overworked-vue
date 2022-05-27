@@ -2,10 +2,12 @@ import { defineModule } from "direct-vuex";
 
 import { Person } from "../types";
 import { moduleActionContext, moduleGetterContext, ionicStore } from "../index";
+import { FirebaseAuthentication } from "@capacitor-firebase/authentication";
 
 export interface UserState {
   user: Person | null;
   token: string | null;
+  authenticationService: "google" | "apple" | null;
 }
 
 const modules = defineModule({
@@ -13,6 +15,7 @@ const modules = defineModule({
     return {
       user: null,
       token: null,
+      authenticationService: null,
     };
   },
   getters: {
@@ -28,6 +31,12 @@ const modules = defineModule({
     SET_TOKEN(state, token: string | null) {
       state.token = token;
     },
+    SET_AUTHENTICATION_SERVICE(
+      state,
+      authenticationService: "google" | "apple" | null
+    ) {
+      state.authenticationService = authenticationService;
+    },
   },
   actions: {
     /**
@@ -39,30 +48,82 @@ const modules = defineModule({
 
       const user = await ionicStore.get("user");
       const token = await ionicStore.get("token");
+      const authenticationService = await ionicStore.get(
+        "authenticationService"
+      );
 
-      if (!user || !token) return false;
+      if (!user || !token || !authenticationService) return false;
 
       commit.SET_TOKEN(token);
       commit.SET_USER(user);
+      commit.SET_AUTHENTICATION_SERVICE(authenticationService);
       return true;
     },
-    async SAVE_AUTH(context, { user, token }: { user: Person; token: string }) {
+    async SAVE_AUTH(
+      context,
+      {
+        user,
+        token,
+        authenticationService,
+      }: {
+        user: Person;
+        token: string;
+        authenticationService: "google" | "apple" | null;
+      }
+    ) {
       const { commit } = actionContext(context);
 
       commit.SET_TOKEN(token);
       commit.SET_USER(user);
+      commit.SET_AUTHENTICATION_SERVICE(authenticationService);
 
       await ionicStore.set("user", user);
       await ionicStore.set("token", token);
+      await ionicStore.set("authenticationService", authenticationService);
     },
     async LOGOUT(context) {
       const { commit } = actionContext(context);
 
       commit.SET_TOKEN(null);
       commit.SET_USER(null);
+      commit.SET_AUTHENTICATION_SERVICE(null);
 
       await ionicStore.remove("user");
       await ionicStore.remove("token");
+      await ionicStore.remove("authenticationService");
+    },
+    async LOGIN_GOOGLE(context) {
+      const { dispatch } = actionContext(context);
+      const { credential, user } =
+        await FirebaseAuthentication.signInWithGoogle();
+
+      if (!credential?.idToken) {
+        throw new Error("Google sign in failed");
+      }
+
+      const body = JSON.stringify({
+        name: user?.displayName,
+        email: user?.email,
+        photo: user?.photoUrl,
+      });
+
+      const method = "POST";
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${credential?.idToken}`,
+      };
+
+      const response = await fetch(
+        `https://api.overworked.sjorsvanholst.nl/v1/person`,
+        { method, headers, body }
+      );
+      const parsed = await response.json();
+
+      await dispatch.SAVE_AUTH({
+        user: parsed,
+        token: credential!.idToken!,
+        authenticationService: "google",
+      });
     },
   },
   namespaced: true,
