@@ -89,8 +89,10 @@ export async function postRequest<ResponseBody>(
   const jwtToken = store.state.authentication.token;
   const authenticationHeaders = new Headers();
 
-  if (jwtToken)
+  if (jwtToken) {
     authenticationHeaders.set("Authorization", `Bearer ${jwtToken}`);
+  }
+
   authenticationHeaders.set("Content-Type", "application/json");
 
   const requestOptions = {

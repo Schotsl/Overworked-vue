@@ -66,6 +66,9 @@ import {
 
 export default defineComponent({
   name: "FriendSearchModel",
+
+  emits: ["closed"],
+
   data(): {
     username: string;
     loading: boolean;
@@ -77,6 +80,7 @@ export default defineComponent({
       persons: [],
     };
   },
+
   watch: {
     async username() {
       this.loading = true;
@@ -94,26 +98,30 @@ export default defineComponent({
       }
     },
   },
+
   computed: {
-    computedEmpty() {
+    computedEmpty(): boolean {
       return (
         !this.loading &&
         this.persons.length === 0 &&
         this.computedUsername.length !== 0
       );
     },
-    computedUsername() {
+    computedUsername(): string {
       return this.username.trim();
     },
   },
+
   methods: {
     addFriend(person: Person) {
       store.dispatch.userdata.ADD_FRIEND(person);
+      this.closeModal();
     },
-    closed() {
+    closeModal() {
       this.$emit("closed");
     },
   },
+
   components: {
     IonModal,
     IonContent,
@@ -128,15 +136,14 @@ export default defineComponent({
     IonInput,
     IonButton,
   },
-  emits: ["closed"],
 });
 </script>
 
 <style scoped>
 ion-text {
-  position: absolute;
   top: 43%;
   left: 50%;
+  position: absolute;
   transform: translate(-50%, -50%) !important;
 }
 
