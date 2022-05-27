@@ -73,6 +73,7 @@ export default defineComponent({
   methods: {
     async onClickClose() {
       store.commit.userdata.SET_SESSION(null);
+      store.commit.app.RESET_STARTPAGE_CURRENTPAGE();
       await this.$router.push("/");
     },
   },
