@@ -178,9 +178,6 @@ export default defineComponent({
     personList() {
       return store.getters.userdata.friends;
     },
-    machineList() {
-      return store.getters.userdata.machines;
-    },
     locationList() {
       return store.getters.userdata.locations;
     },
