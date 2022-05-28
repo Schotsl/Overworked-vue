@@ -98,11 +98,6 @@ export default defineComponent({
   },
 
   setup() {
-    onIonViewWillEnter(async () => {
-      if (store.getters.authentication.isLoggedIn) {
-        router.push("/entries");
-      }
-    });
     return {
       logoApple,
       logoGoogle,
