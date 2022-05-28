@@ -19,6 +19,15 @@ export interface Location {
   lng: number;
 }
 
+export interface Entry {
+  uuid: string;
+  person: string;
+  machine: string;
+  location: string;
+  weight: number;
+  upgrade: boolean;
+}
+
 export interface PersonCollection {
   persons: Person[];
   total: number;
@@ -35,6 +44,13 @@ export interface MachineCollection {
 
 export interface LocationCollection {
   locations: Location[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface EntryCollection {
+  entries: Entry[];
   total: number;
   offset: number;
   limit: number;

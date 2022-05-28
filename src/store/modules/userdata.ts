@@ -9,6 +9,8 @@ import {
   MachineCollection,
   Location,
   LocationCollection,
+  Entry,
+  EntryCollection,
 } from "../types";
 
 export interface UserDataState {
@@ -26,6 +28,7 @@ export interface Session {
   participants: Person[];
   location: Location;
   day: number;
+  entries: Entry[];
 }
 
 const modules = defineModule({
@@ -75,6 +78,9 @@ const modules = defineModule({
     SET_SESSION_DAY(state, day: number) {
       if (state.session) state.session.day = day;
     },
+    SET_SESSION_ENTRIES(state, entries: Entry[]) {
+      if (state.session) state.session.entries = entries;
+    },
     ADD_FRIENDS(state, friend: Person) {
       state.friends.push(friend);
     },
@@ -112,6 +118,19 @@ const modules = defineModule({
       );
 
       if (responseBody) commit.SET_LOCATIONS(responseBody.locations);
+    },
+    async FETCH_SESSION_ENTRIES(context) {
+      const { commit, state } = actionContext(context);
+
+      const personsString = state.session?.participants
+        .map((p) => p.uuid)
+        .join(",");
+
+      const responseBody = await getRequest<EntryCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/entry?persons=${personsString}&limit=99`
+      );
+
+      if (responseBody) commit.SET_SESSION_ENTRIES(responseBody.entries);
     },
     async SEARCH_FRIENDS(_context, payload: UserSearch) {
       const responseBody = await getRequest<PersonCollection>(
