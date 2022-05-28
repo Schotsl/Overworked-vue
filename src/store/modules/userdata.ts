@@ -114,7 +114,7 @@ const modules = defineModule({
       const { commit, rootState } = actionContext(context);
 
       const responseBody = await getRequest<LocationCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/location?persons=${rootState.authentication.user?.uuid}&limit=99`
+        `https://api.overworked.sjorsvanholst.nl/v1/location?limit=99`
       );
 
       if (responseBody) commit.SET_LOCATIONS(responseBody.locations);
