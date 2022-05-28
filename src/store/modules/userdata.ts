@@ -15,7 +15,6 @@ import {
 
 export interface UserDataState {
   friends: Person[];
-  machines: Machine[];
   locations: Location[];
   session: Session | null;
 }
@@ -29,13 +28,13 @@ export interface Session {
   location: Location;
   day: number;
   entries: Entry[];
+  machines: Machine[];
 }
 
 const modules = defineModule({
   state: (): UserDataState => {
     return {
       friends: [],
-      machines: [],
       locations: [],
       session: null,
     };
@@ -44,10 +43,6 @@ const modules = defineModule({
     friends(...args): Person[] {
       const { state } = getterContext(args);
       return state.friends;
-    },
-    machines(...args): Machine[] {
-      const { state } = getterContext(args);
-      return state.machines;
     },
     locations(...args): Location[] {
       const { state } = getterContext(args);
@@ -66,9 +61,6 @@ const modules = defineModule({
     SET_FRIENDS(state, friends: Person[]) {
       state.friends = friends;
     },
-    SET_MACHINES(state, machines: Machine[]) {
-      state.machines = machines;
-    },
     SET_LOCATIONS(state, locations: Location[]) {
       state.locations = locations;
     },
@@ -81,11 +73,11 @@ const modules = defineModule({
     SET_SESSION_ENTRIES(state, entries: Entry[]) {
       if (state.session) state.session.entries = entries;
     },
+    SET_SESSION_MACHINES(state, machines: Machine[]) {
+      if (state.session) state.session.machines = machines;
+    },
     ADD_FRIENDS(state, friend: Person) {
       state.friends.push(friend);
-    },
-    ADD_MACHINES(state, machine: Machine) {
-      state.machines.push(machine);
     },
     ADD_LOCATIONS(state, location: Location) {
       state.locations.push(location);
@@ -101,17 +93,23 @@ const modules = defineModule({
 
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
     },
-    async FETCH_MACHINES(context) {
-      const { commit, rootState } = actionContext(context);
+    async FETCH_SESSION_MACHINES(context) {
+      const { commit, state } = actionContext(context);
+
+      if (!state.session) return;
+
+      const personsString = state.session?.participants
+        .map((p) => p.uuid)
+        .join(",");
 
       const responseBody = await getRequest<MachineCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${rootState.authentication.user?.uuid}`
+        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${personsString}`
       );
 
-      if (responseBody) commit.SET_MACHINES(responseBody.machines);
+      if (responseBody) commit.SET_SESSION_MACHINES(responseBody.machines);
     },
     async FETCH_LOCATIONS(context) {
-      const { commit, rootState } = actionContext(context);
+      const { commit } = actionContext(context);
 
       const responseBody = await getRequest<LocationCollection>(
         `https://api.overworked.sjorsvanholst.nl/v1/location?limit=99`
