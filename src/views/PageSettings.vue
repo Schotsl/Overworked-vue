@@ -56,7 +56,6 @@ export default defineComponent({
       store.commit.app.RESET_STARTPAGE_CURRENTPAGE();
       store.commit.userdata.SET_FRIENDS([]);
       store.commit.userdata.SET_LOCATIONS([]);
-      store.commit.userdata.SET_MACHINES([]);
       store.commit.userdata.SET_SESSION(null);
       router.push("/");
     },
