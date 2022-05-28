@@ -88,7 +88,7 @@ const modules = defineModule({
       const { commit } = actionContext(context);
 
       const responseBody = await getRequest<PersonCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/person/friend`
+        `https://api.overworked.sjorsvanholst.nl/v1/person/friend?limit=99`
       );
 
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
@@ -103,7 +103,7 @@ const modules = defineModule({
         .join(",");
 
       const responseBody = await getRequest<MachineCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${personsString}`
+        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${personsString}&limit=99`
       );
 
       if (responseBody) commit.SET_SESSION_MACHINES(responseBody.machines);
