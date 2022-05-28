@@ -231,6 +231,7 @@ export default defineComponent({
         day: this.day,
         location,
         participants,
+        entries: [],
       });
 
       this.loading = false;
