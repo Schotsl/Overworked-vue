@@ -122,6 +122,8 @@ const modules = defineModule({
     async FETCH_SESSION_ENTRIES(context) {
       const { commit, state } = actionContext(context);
 
+      if (!state.session) return;
+
       const personsString = state.session?.participants
         .map((p) => p.uuid)
         .join(",");
