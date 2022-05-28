@@ -212,7 +212,7 @@ export default defineComponent({
         );
       }
     },
-    saveSession() {
+    async saveSession() {
       this.loading = true;
 
       const participants = this.participantsForm
@@ -233,6 +233,9 @@ export default defineComponent({
       });
 
       this.loading = false;
+
+      await store.dispatch.userdata.FETCH_SESSION_ENTRIES();
+      await store.dispatch.userdata.FETCH_SESSION_MACHINES();
 
       this.$router.push("/schedule");
     },
