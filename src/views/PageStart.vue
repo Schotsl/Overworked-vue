@@ -255,9 +255,5 @@ export default defineComponent({
       this.participantsForm = part;
     },
   },
-  async mounted() {
-    await store.dispatch.userdata.FETCH_FRIENDS();
-    await store.dispatch.userdata.FETCH_LOCATIONS();
-  },
 });
 </script>

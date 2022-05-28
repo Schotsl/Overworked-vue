@@ -91,6 +91,8 @@ export default defineComponent({
     async googleSignin() {
       this.loginLoading = true;
       await store.dispatch.authentication.LOGIN_GOOGLE();
+      await store.dispatch.userdata.FETCH_FRIENDS();
+      await store.dispatch.userdata.FETCH_LOCATIONS();
       await router.push("/");
       this.loginLoading = false;
     },

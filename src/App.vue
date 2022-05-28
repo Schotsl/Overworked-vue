@@ -52,6 +52,8 @@ export default defineComponent({
     } catch (error) {
       console.error("Could not lock screen orientation, are we in a browser?");
     }
+    await store.dispatch.userdata.FETCH_FRIENDS();
+    await store.dispatch.userdata.FETCH_LOCATIONS();
   },
 });
 </script>
