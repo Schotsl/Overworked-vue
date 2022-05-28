@@ -28,28 +28,28 @@ export interface Entry {
   upgrade: boolean;
 }
 
-export interface PersonCollection extends GenericCollection {
+export interface PersonCollection {
   persons: Person[];
   total: number;
   offset: number;
   limit: number;
 }
 
-export interface MachineCollection extends GenericCollection {
+export interface MachineCollection {
   machines: Machine[];
   total: number;
   offset: number;
   limit: number;
 }
 
-export interface LocationCollection extends GenericCollection {
+export interface LocationCollection {
   locations: Location[];
   total: number;
   offset: number;
   limit: number;
 }
 
-export interface EntryCollection extends GenericCollection {
+export interface EntryCollection {
   entries: Entry[];
   total: number;
   offset: number;
