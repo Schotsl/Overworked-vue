@@ -8,6 +8,7 @@ import PageSchedule from "../views/PageSchedule.vue";
 import PageSettings from "../views/PageSettings.vue";
 import PageStart from "../views/PageStart.vue";
 import store, { ionicStore } from "@/store";
+import { SplashScreen } from "@capacitor/splash-screen";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -63,6 +64,7 @@ router.beforeEach(async (to, from, next) => {
   if (!store.getters.authentication.isLoggedIn) {
     if (to.name !== "Login") {
       next({ name: "Login" });
+      SplashScreen.hide();
       return;
     }
   }
@@ -71,6 +73,7 @@ router.beforeEach(async (to, from, next) => {
   if (store.getters.authentication.isLoggedIn) {
     if (to.name === "Login") {
       next({ path: "/" });
+      SplashScreen.hide();
       return;
     }
   }
