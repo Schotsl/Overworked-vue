@@ -15,10 +15,17 @@
       <ion-list>
         <ion-item v-for="entry in sessionEntries" :key="entry.uuid">
           <ion-label>
-            <h2>{{ personName(entry.person) }}</h2>
-            <p>{{ machineTitle(entry.machine) }}</p>
+            <h2>{{ getPerson(entry.person)?.name ?? "Invalid Person" }}</h2>
+            <p>
+              <ion-icon :icon="barbellOutline"></ion-icon>
+              <ion-text>{{ entry.weight }}KG</ion-text>
+              <ion-icon :icon="readerOutline"></ion-icon>
+              <ion-text>{{
+                getMachine(entry.machine)?.title ?? "Invalid Machine"
+              }}</ion-text>
+            </p>
           </ion-label>
-          <ion-icon @click="deleteEntry(entry)" :icon="expandOutline" />
+          <ion-icon @click="deleteEntry(entry)" :icon="hammerOutline" />
         </ion-item>
       </ion-list>
     </ion-content>
@@ -37,16 +44,19 @@ import {
   IonItem,
   IonLabel,
   IonIcon,
+  IonText,
 } from "@ionic/vue";
 import store from "@/store";
-import { Entry } from "@/store/types";
-import { expandOutline } from "ionicons/icons";
+import { Entry, Machine, Person } from "@/store/types";
+import { hammerOutline, barbellOutline, readerOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "PageEntries",
   setup() {
     return {
-      expandOutline,
+      hammerOutline,
+      barbellOutline,
+      readerOutline,
     };
   },
   components: {
@@ -59,6 +69,7 @@ export default defineComponent({
     IonItem,
     IonLabel,
     IonIcon,
+    IonText,
   },
   computed: {
     sessionEntries() {
@@ -70,19 +81,31 @@ export default defineComponent({
       console.log("Not Impemented", entry);
       // await store.dispatch("deleteEntry", entry);
     },
-    personName(uuid: string): string {
+    getPerson(uuid: string): Person | null {
       return (
-        store.state.userdata.session?.participants.find((p) => p.uuid === uuid)
-          ?.name ?? ""
+        store.state.userdata.session?.participants.find(
+          (p) => p.uuid === uuid
+        ) ?? null
       );
     },
-    machineTitle(uuid: string): string {
+    getMachine(uuid: string): Machine | null {
       return (
         store.state.userdata.session?.machines.machines.find(
           (m) => m.uuid === uuid
-        )?.title ?? ""
+        ) ?? null
       );
     },
   },
 });
 </script>
+
+<style>
+ion-icon {
+  margin-bottom: -2.2px;
+  margin-right: 4px;
+}
+
+ion-text {
+  margin-right: 10px;
+}
+</style>
