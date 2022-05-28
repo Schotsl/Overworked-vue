@@ -9,12 +9,20 @@
           >
         </template>
         <template v-if="currentPage === pages[pages.length - 1]">
-          <ion-button slot="end" fill="clear" @click="saveSession"
+          <ion-button
+            slot="end"
+            fill="clear"
+            @click="saveSession"
+            :disabled="!nextButtonEnabled"
             >Finish</ion-button
           >
         </template>
         <template v-else>
-          <ion-button slot="end" fill="clear" @click="nextPage"
+          <ion-button
+            slot="end"
+            fill="clear"
+            @click="nextPage"
+            :disabled="!nextButtonEnabled"
             >Next</ion-button
           >
         </template>
@@ -178,6 +186,16 @@ export default defineComponent({
     },
     currentPage() {
       return store.state.app.startPage.currentPage;
+    },
+    nextButtonEnabled(): boolean {
+      if (this.currentPage === "Friend") {
+        return this.participantsForm.some((p) => p.checked);
+      } else if (this.currentPage === "Location") {
+        return this.locationForm !== "";
+      } else if (this.currentPage === "Day") {
+        return true;
+      }
+      return false;
     },
   },
   methods: {
