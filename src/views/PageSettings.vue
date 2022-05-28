@@ -53,6 +53,11 @@ export default defineComponent({
   methods: {
     async logout() {
       await store.dispatch.authentication.LOGOUT();
+      store.commit.app.RESET_STARTPAGE_CURRENTPAGE();
+      store.commit.userdata.SET_FRIENDS([]);
+      store.commit.userdata.SET_LOCATIONS([]);
+      store.commit.userdata.SET_MACHINES([]);
+      store.commit.userdata.SET_SESSION(null);
       router.push("/");
     },
   },

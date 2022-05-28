@@ -37,6 +37,7 @@ import {
   IonContent,
   IonSelect,
   IonItem,
+  IonSelectOption,
 } from "@ionic/vue";
 import store from "@/store";
 
@@ -49,6 +50,7 @@ export default defineComponent({
     IonToolbar,
     IonContent,
     IonSelect,
+    IonSelectOption,
     IonItem,
   },
   data() {
@@ -67,12 +69,6 @@ export default defineComponent({
   computed: {
     day() {
       return store.state.userdata.session?.day || 0;
-    },
-  },
-  methods: {
-    setDay(event: any) {
-      console.log(this.day);
-      console.log(event);
     },
   },
 });

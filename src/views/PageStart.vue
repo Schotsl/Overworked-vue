@@ -3,13 +3,26 @@
     <ion-header :translucent="true">
       <ion-toolbar>
         <ion-title>Starting a session</ion-title>
+        <template v-if="currentPage !== pages[0]">
+          <ion-button slot="end" fill="clear" @click="prevPage"
+            >Previous</ion-button
+          >
+        </template>
         <template v-if="currentPage === pages[pages.length - 1]">
-          <ion-button slot="end" fill="clear" @click="saveSession"
+          <ion-button
+            slot="end"
+            fill="clear"
+            @click="saveSession"
+            :disabled="!nextButtonEnabled"
             >Finish</ion-button
           >
         </template>
         <template v-else>
-          <ion-button slot="end" fill="clear" @click="nextPage"
+          <ion-button
+            slot="end"
+            fill="clear"
+            @click="nextPage"
+            :disabled="!nextButtonEnabled"
             >Next</ion-button
           >
         </template>
@@ -174,6 +187,16 @@ export default defineComponent({
     currentPage() {
       return store.state.app.startPage.currentPage;
     },
+    nextButtonEnabled(): boolean {
+      if (this.currentPage === "Friend") {
+        return this.participantsForm.some((p) => p.checked);
+      } else if (this.currentPage === "Location") {
+        return this.locationForm !== "";
+      } else if (this.currentPage === "Day") {
+        return true;
+      }
+      return false;
+    },
   },
   methods: {
     nextPage() {
@@ -181,6 +204,14 @@ export default defineComponent({
       if (currentPageIndex < this.pages.length - 1) {
         store.commit.app.SET_STARTPAGE_CURRENTPAGE(
           this.pages[currentPageIndex + 1]
+        );
+      }
+    },
+    prevPage() {
+      const currentPageIndex = this.pages.indexOf(this.currentPage);
+      if (currentPageIndex > 0) {
+        store.commit.app.SET_STARTPAGE_CURRENTPAGE(
+          this.pages[currentPageIndex - 1]
         );
       }
     },
