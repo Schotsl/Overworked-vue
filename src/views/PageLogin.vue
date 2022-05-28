@@ -55,7 +55,6 @@ import {
   IonSpinner,
   IonToolbar,
   IonContent,
-  onIonViewWillEnter,
 } from "@ionic/vue";
 
 import store from "@/store";
@@ -92,7 +91,7 @@ export default defineComponent({
     async googleSignin() {
       this.loginLoading = true;
       await store.dispatch.authentication.LOGIN_GOOGLE();
-      await router.push("/entries");
+      await router.push("/");
       this.loginLoading = false;
     },
   },
