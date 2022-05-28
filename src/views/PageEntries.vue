@@ -10,21 +10,17 @@
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Entries</ion-title>
-          <template>
-            <ion-list>
-              <ion-item v-for="entry in sessionEntries" :key="entry.uuid">
-                <ion-label>
-                  <h2>{{ entry.person }}</h2>
-                  <p>{{ entry.machine }}</p>
-                </ion-label>
-                <ion-button slot="end" fill="clear" @click="deleteEntry(entry)">
-                  <ion-icon name="trash"></ion-icon>
-                </ion-button>
-              </ion-item>
-            </ion-list>
-          </template>
         </ion-toolbar>
       </ion-header>
+      <ion-list>
+        <ion-item v-for="entry in sessionEntries" :key="entry.uuid">
+          <ion-label>
+            <h2>{{ personName(entry.person) }}</h2>
+            <p>{{ machineTitle(entry.machine) }}</p>
+          </ion-label>
+          <ion-icon @click="deleteEntry(entry)" :icon="expandOutline" />
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -37,23 +33,32 @@ import {
   IonHeader,
   IonToolbar,
   IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonIcon,
 } from "@ionic/vue";
 import store from "@/store";
 import { Entry } from "@/store/types";
+import { expandOutline } from "ionicons/icons";
 
 export default defineComponent({
   name: "PageEntries",
+  setup() {
+    return {
+      expandOutline,
+    };
+  },
   components: {
     IonPage,
     IonTitle,
     IonHeader,
     IonToolbar,
     IonContent,
-  },
-  data() {
-    return {
-      loading: true,
-    };
+    IonList,
+    IonItem,
+    IonLabel,
+    IonIcon,
   },
   computed: {
     sessionEntries() {
@@ -65,11 +70,18 @@ export default defineComponent({
       console.log("Not Impemented", entry);
       // await store.dispatch("deleteEntry", entry);
     },
-  },
-  async mounted() {
-    this.loading = true;
-    await store.dispatch.userdata.FETCH_SESSION_ENTRIES();
-    this.loading = false;
+    personName(uuid: string): string {
+      return (
+        store.state.userdata.session?.participants.find((p) => p.uuid === uuid)
+          ?.name ?? ""
+      );
+    },
+    machineTitle(uuid: string): string {
+      return (
+        store.state.userdata.session?.machines.find((m) => m.uuid === uuid)
+          ?.title ?? ""
+      );
+    },
   },
 });
 </script>
