@@ -229,7 +229,12 @@ export default defineComponent({
         location,
         participants,
         entries: [],
-        machines: [],
+        machines: {
+          limit: 0,
+          machines: [],
+          offset: 0,
+          total: 0,
+        },
       });
 
       this.loading = false;

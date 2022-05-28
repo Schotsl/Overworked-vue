@@ -4,13 +4,13 @@ import { moduleActionContext, moduleGetterContext } from "../index";
 
 import {
   Person,
-  Machine,
   PersonCollection,
   MachineCollection,
   Location,
   LocationCollection,
   Entry,
   EntryCollection,
+  Machine,
 } from "../types";
 
 export interface UserDataState {
@@ -28,7 +28,29 @@ export interface Session {
   location: Location;
   day: number;
   entries: Entry[];
-  machines: Machine[];
+  machines: MachineCollection;
+}
+
+async function recursiveFetch<T>(
+  url: string,
+  itemName: string,
+  offset = 0
+): Promise<T[]> {
+  const responseBody = await getRequest<any>(
+    `${url}${offset ? `&offset=${offset}` : ""}`
+  );
+
+  if (responseBody.total > responseBody.offset + responseBody.limit) {
+    const additionalData = await recursiveFetch<T>(
+      url,
+      itemName,
+      responseBody.offset + responseBody.limit
+    );
+
+    if (responseBody[itemName])
+      return [...responseBody[itemName], ...additionalData];
+  }
+  return responseBody[itemName] || [];
 }
 
 const modules = defineModule({
@@ -73,7 +95,7 @@ const modules = defineModule({
     SET_SESSION_ENTRIES(state, entries: Entry[]) {
       if (state.session) state.session.entries = entries;
     },
-    SET_SESSION_MACHINES(state, machines: Machine[]) {
+    SET_SESSION_MACHINES(state, machines: MachineCollection) {
       if (state.session) state.session.machines = machines;
     },
     ADD_FRIENDS(state, friend: Person) {
@@ -94,19 +116,26 @@ const modules = defineModule({
       if (responseBody) commit.SET_FRIENDS(responseBody.persons);
     },
     async FETCH_SESSION_MACHINES(context) {
-      const { commit, state } = actionContext(context);
-
+      const { state, commit } = actionContext(context);
       if (!state.session) return;
 
       const personsString = state.session?.participants
         .map((p) => p.uuid)
         .join(",");
 
-      const responseBody = await getRequest<MachineCollection>(
-        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${personsString}&limit=99`
+      const machines = await recursiveFetch<Machine>(
+        `https://api.overworked.sjorsvanholst.nl/v1/machine?persons=${personsString}&limit=99`,
+        "machines"
       );
 
-      if (responseBody) commit.SET_SESSION_MACHINES(responseBody.machines);
+      console.log(machines);
+
+      commit.SET_SESSION_MACHINES({
+        machines,
+        total: machines.length,
+        limit: machines.length,
+        offset: 0,
+      });
     },
     async FETCH_LOCATIONS(context) {
       const { commit } = actionContext(context);

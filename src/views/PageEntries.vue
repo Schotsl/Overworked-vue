@@ -78,8 +78,9 @@ export default defineComponent({
     },
     machineTitle(uuid: string): string {
       return (
-        store.state.userdata.session?.machines.find((m) => m.uuid === uuid)
-          ?.title ?? ""
+        store.state.userdata.session?.machines.machines.find(
+          (m) => m.uuid === uuid
+        )?.title ?? ""
       );
     },
   },
