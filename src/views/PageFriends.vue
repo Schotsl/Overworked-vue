@@ -47,9 +47,15 @@
               <img :src="friend.photo ?? 'https://via.placeholder.com/50x50'" />
             </ion-avatar>
             <ion-label>
-              <h2>{{ friend.name }}</h2>
+              <h2>
+                {{ friend.name }}
+              </h2>
             </ion-label>
-            <ion-icon @click="deleteFriend(friend)" :icon="trashOutline" />
+            <ion-icon
+              @click="deleteFriend(friend)"
+              :icon="trashOutline"
+              v-if="friend.friend"
+            />
           </ion-item>
         </template>
       </ion-list>
