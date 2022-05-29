@@ -13,26 +13,64 @@
         </ion-toolbar>
       </ion-header>
       <ion-list>
-        <ion-item v-for="entry in sessionEntries" :key="entry.uuid">
-          <ion-label>
-            <h2>{{ getPerson(entry.person)?.name ?? "Invalid Person" }}</h2>
-            <p>
-              <ion-icon :icon="barbellOutline"></ion-icon>
-              <ion-text>{{ entry.weight }}KG</ion-text>
-              <ion-icon :icon="readerOutline"></ion-icon>
-              <ion-text>{{
-                getMachine(entry.machine)?.title ?? "Invalid Machine"
-              }}</ion-text>
-            </p>
-          </ion-label>
-          <ion-icon @click="deleteEntry(entry)" :icon="hammerOutline" />
-        </ion-item>
+        <div v-for="(entry, index) in sessionEntries" :key="entry.uuid">
+          <ion-item v-if="isNewDay(index)">
+            <ion-label>
+              <h1>
+                {{ dateString(entry.created) }}
+              </h1>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-label>
+              <h2>{{ getPerson(entry.person)?.name ?? "Invalid Person" }}</h2>
+              <p>
+                <ion-icon :icon="barbellOutline"></ion-icon>
+                <ion-text>{{ entry.weight }}KG</ion-text>
+                <ion-icon :icon="readerOutline"></ion-icon>
+                <ion-text>{{
+                  getMachine(entry.machine)?.title ?? "Invalid Machine"
+                }}</ion-text>
+              </p>
+            </ion-label>
+            <ion-icon @click="deleteEntry(entry)" :icon="hammerOutline" />
+          </ion-item>
+        </div>
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
+function getMonthName(month: number) {
+  return [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ][month];
+}
+
+function getDayName(day: number) {
+  return [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ][day];
+}
+
 import { defineComponent } from "vue";
 import {
   IonPage,
@@ -94,6 +132,28 @@ export default defineComponent({
           (m) => m.uuid === uuid
         ) ?? null
       );
+    },
+    isNewDay(index: number) {
+      if (index === 0) {
+        return true;
+      } else if (
+        this.sessionEntries[index].created.getDay() !==
+        this.sessionEntries[index - 1].created.getDay()
+      ) {
+        return true;
+      }
+      return false;
+    },
+    dateString(date: Date) {
+      if (date.getDate() === new Date().getDate()) {
+        return "Today";
+      } else if (date.getDate() === new Date().getDate() - 1) {
+        return "Yesterday";
+      } else if (date.getDate() >= new Date().getDate() - 6) {
+        return getDayName(date.getDay());
+      } else {
+        return `${date.getDate()} ${getMonthName(date.getMonth())}`;
+      }
     },
   },
 });
