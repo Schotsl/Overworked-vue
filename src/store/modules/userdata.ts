@@ -11,6 +11,7 @@ import {
   Entry,
   EntryCollection,
   Machine,
+  ScheduleMachineCollection,
 } from "../types";
 
 export interface UserDataState {
@@ -29,6 +30,7 @@ export interface Session {
   day: number;
   entries: Entry[];
   machines: MachineCollection;
+  schedule: ScheduleMachineCollection;
 }
 
 async function recursiveFetch<T>(
@@ -97,6 +99,9 @@ const modules = defineModule({
     },
     SET_SESSION_MACHINES(state, machines: MachineCollection) {
       if (state.session) state.session.machines = machines;
+    },
+    SET_SESSION_SCHEDULE(state, schedule: ScheduleMachineCollection) {
+      if (state.session) state.session.schedule = schedule;
     },
     ADD_FRIENDS(state, friend: Person) {
       state.friends.push(friend);
@@ -173,6 +178,30 @@ const modules = defineModule({
       });
 
       if (responseBody) commit.SET_SESSION_ENTRIES(responseBody.entries);
+    },
+    async FETCH_SESSION_SCHEDULE(context) {
+      const { commit, state } = actionContext(context);
+
+      if (!state.session) return;
+
+      const personsString = state.session?.participants
+        .map((p) => p.uuid)
+        .join(",");
+
+      const responseBody = await getRequest<ScheduleMachineCollection>(
+        `https://api.overworked.sjorsvanholst.nl/v1/overview?persons=${personsString}&day=${state.session.day}&limit=99`
+      );
+
+      responseBody.machines.map((m) => {
+        m.created = new Date(m.created);
+        m.updated = new Date(m.updated);
+        m.entries.map((e) => {
+          e.created = new Date(e.created);
+          e.updated = new Date(e.updated);
+        });
+      });
+
+      commit.SET_SESSION_SCHEDULE(responseBody);
     },
     async SEARCH_FRIENDS(_context, payload: UserSearch) {
       const responseBody = await getRequest<PersonCollection>(

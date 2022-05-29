@@ -235,12 +235,19 @@ export default defineComponent({
           offset: 0,
           total: 0,
         },
+        schedule: {
+          limit: 0,
+          machines: [],
+          offset: 0,
+          total: 0,
+        },
       });
 
       this.loading = false;
 
       await store.dispatch.userdata.FETCH_SESSION_ENTRIES();
       await store.dispatch.userdata.FETCH_SESSION_MACHINES();
+      await store.dispatch.userdata.FETCH_SESSION_SCHEDULE();
 
       this.$router.push("/schedule");
     },

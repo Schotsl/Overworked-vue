@@ -16,6 +16,10 @@ export interface Machine {
   updated: Date;
 }
 
+export type ScheduleMachine = Machine & {
+  entries: Entry[];
+};
+
 export interface Location {
   uuid: string;
   title: string;
@@ -59,6 +63,13 @@ export interface LocationCollection {
 
 export interface EntryCollection {
   entries: Entry[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface ScheduleMachineCollection {
+  machines: ScheduleMachine[];
   total: number;
   offset: number;
   limit: number;

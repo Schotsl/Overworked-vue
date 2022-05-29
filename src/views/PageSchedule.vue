@@ -23,6 +23,16 @@
           <ion-title size="large">Schedule</ion-title>
         </ion-toolbar>
       </ion-header>
+      <ion-list>
+        <ion-item v-for="machine in sessionMachines" :key="machine.uuid">
+          <ion-label>
+            <h2>{{ machine.title }}</h2>
+            <div v-for="entry in machine.entries" :key="entry.uuid">
+              <h4>{{ getPerson(entry.person)?.name }}</h4>
+            </div>
+          </ion-label>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -38,8 +48,11 @@ import {
   IonSelect,
   IonItem,
   IonSelectOption,
+  IonList,
+  IonLabel,
 } from "@ionic/vue";
 import store from "@/store";
+import { Machine, Person } from "@/store/types";
 
 export default defineComponent({
   name: "PageSchedule",
@@ -52,6 +65,8 @@ export default defineComponent({
     IonSelect,
     IonSelectOption,
     IonItem,
+    IonList,
+    IonLabel,
   },
   data() {
     return {
@@ -59,8 +74,11 @@ export default defineComponent({
     };
   },
   watch: {
-    dayForm(formInput: number) {
+    async dayForm(formInput: number) {
       store.commit.userdata.SET_SESSION_DAY(formInput);
+      await store.dispatch.userdata.FETCH_SESSION_ENTRIES();
+      await store.dispatch.userdata.FETCH_SESSION_MACHINES();
+      await store.dispatch.userdata.FETCH_SESSION_SCHEDULE();
     },
     day(storeChange: number) {
       this.dayForm = storeChange;
@@ -69,6 +87,25 @@ export default defineComponent({
   computed: {
     day() {
       return store.state.userdata.session?.day || 0;
+    },
+    sessionMachines() {
+      return store.state.userdata.session?.schedule.machines || [];
+    },
+  },
+  methods: {
+    getPerson(uuid: string): Person | null {
+      return (
+        store.state.userdata.session?.participants.find(
+          (p) => p.uuid === uuid
+        ) ?? null
+      );
+    },
+    getMachine(uuid: string): Machine | null {
+      return (
+        store.state.userdata.session?.machines.machines.find(
+          (m) => m.uuid === uuid
+        ) ?? null
+      );
     },
   },
 });
