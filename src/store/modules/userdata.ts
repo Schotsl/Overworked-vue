@@ -128,7 +128,10 @@ const modules = defineModule({
         "machines"
       );
 
-      console.log(machines);
+      machines.map((m) => {
+        m.created = new Date(m.created);
+        m.updated = new Date(m.updated);
+      });
 
       commit.SET_SESSION_MACHINES({
         machines,
@@ -143,6 +146,11 @@ const modules = defineModule({
       const responseBody = await getRequest<LocationCollection>(
         `https://api.overworked.sjorsvanholst.nl/v1/location?limit=99`
       );
+
+      responseBody.locations.map((l) => {
+        l.created = new Date(l.created);
+        l.updated = new Date(l.updated);
+      });
 
       if (responseBody) commit.SET_LOCATIONS(responseBody.locations);
     },
@@ -159,12 +167,22 @@ const modules = defineModule({
         `https://api.overworked.sjorsvanholst.nl/v1/entry?persons=${personsString}&limit=99`
       );
 
+      responseBody.entries.map((e) => {
+        e.created = new Date(e.created);
+        e.updated = new Date(e.updated);
+      });
+
       if (responseBody) commit.SET_SESSION_ENTRIES(responseBody.entries);
     },
     async SEARCH_FRIENDS(_context, payload: UserSearch) {
       const responseBody = await getRequest<PersonCollection>(
         `https://api.overworked.sjorsvanholst.nl/v1/person/search?query=${payload.username}`
       );
+
+      responseBody.persons.map((p) => {
+        p.created = new Date(p.created);
+        p.updated = new Date(p.updated);
+      });
 
       return responseBody?.persons;
     },

@@ -3,6 +3,8 @@ export interface Person {
   uuid: string;
   photo: string | undefined;
   friend: string | undefined;
+  created: Date;
+  updated: Date;
 }
 
 export interface Machine {
@@ -10,6 +12,8 @@ export interface Machine {
   title: string;
   reps: number;
   sets: number;
+  created: Date;
+  updated: Date;
 }
 
 export interface Location {
@@ -17,6 +21,8 @@ export interface Location {
   title: string;
   lat: number;
   lng: number;
+  created: Date;
+  updated: Date;
 }
 
 export interface Entry {
@@ -26,6 +32,8 @@ export interface Entry {
   location: string;
   weight: number;
   upgrade: boolean;
+  created: Date;
+  updated: Date;
 }
 
 export interface PersonCollection {
