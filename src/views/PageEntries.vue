@@ -145,6 +145,7 @@ export default defineComponent({
       return false;
     },
     dateString(date: Date) {
+      // TODO: @Wouter - This shit broke yo
       if (date.getDate() === new Date().getDate()) {
         return "Today";
       } else if (date.getDate() === new Date().getDate() - 1) {
